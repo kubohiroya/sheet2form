@@ -1,13 +1,15 @@
-function onOpen(event){
-  var ui = SpreadsheetApp.getUi();
-  
-  var messages = getMessages('ui');
-  
-  ui.createMenu(messages['create form'])
-  //.addItem(messages['initialize sheet'], 'initializeSheet')
-  //.addItem(messages['validate sheet'],'validateSheet')
-  .addItem(messages['create new form'],'createNewForm')
-  .addToUi();
+'use strict';
+
+function onOpen(event) {
+    var ui = SpreadsheetApp.getUi();
+
+    var messages = getMessages('ui');
+
+    ui.createMenu(messages['create form'])
+    //.addItem(messages['initialize sheet'], 'initializeSheet')
+    //.addItem(messages['validate sheet'],'validateSheet')
+        .addItem(messages['create new form'], 'createNewForm')
+        .addToUi();
 }
 
 /*
