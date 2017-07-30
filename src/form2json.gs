@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 function Form2Json() {
 
@@ -85,7 +85,7 @@ function Form2Json() {
             publishedUrl: form.getPublishedUrl(),
             shuffleQuestions: form.getShuffleQuestions(),
             summaryUrl: form.getSummaryUrl(),
-            titile: form.getTitle()
+            title: form.getTitle()
         };
 
         try {
@@ -213,9 +213,6 @@ function Form2Json() {
             },
             TEXT: function (item) {
                 return item.asTextItem();
-            },
-            TIME: function (item) {
-                return item.asTimeItem();
             }
         }[typeName](item);
     }
@@ -237,7 +234,7 @@ function Form2Json() {
             id: item.getId(),
             index: item.getIndex(),
             title: item.getTitle(),
-            helpText: item.getHelpText(),
+            helpText: item.getHelpText()
         };
         if (func) {
             var typedItem = getTypedItem(item);
@@ -250,7 +247,7 @@ function Form2Json() {
     function createQuestionnaireItem(item, func) {
         return createItem(item, function (typedItem) {
             var params = {
-                isRequired: typedItem.isRequired(),
+                isRequired: typedItem.isRequired()
             };
             if (func) {
                 return Object_assign(params, func(typedItem));
@@ -265,11 +262,12 @@ function Form2Json() {
             var params = {
                 points: typedItem.getPoints(),
                 feedbackForCorrect: feedbackToJson(typedItem.getFeedbackForCorrect()),
-                feedbackForIncorrect: feedbackToJson(typedItem.getFeedbackForIncorrect()),
+                feedbackForIncorrect: feedbackToJson(typedItem.getFeedbackForIncorrect())
             };
             if (func) {
                 return Object_assign(params, func(typedItem));
             } else {
+
                 return params;
             }
         });

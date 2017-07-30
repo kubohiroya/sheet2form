@@ -13,7 +13,7 @@ function Sheet2Form() {
             TITLE: 1,
             DESCRIPTION: 1,
             MESSAGE: 1,
-            BOOLEAN: 1,
+            BOOLEAN: 1
         },
         ITEM: {
             TITLE: 1,
@@ -86,14 +86,14 @@ function Sheet2Form() {
         'CONTINUE': FormApp.PageNavigationType.CONTINUE,
         'GO_TO_PAGE': FormApp.PageNavigationType.GO_TO_PAGE,
         'RESTART': FormApp.PageNavigationType.RESTART,
-        'SUBMIT': FormApp.PageNavigationType.SUBMIT,
+        'SUBMIT': FormApp.PageNavigationType.SUBMIT
     };
 
     var booleanValue = function (value) {
         if (typeof value === 'boolean') {
             return value;
         } else if (typeof value === 'string') {
-            return (value.toLowerCase() === 'false' || value === '0' || value === EMPTY_STRING) ? false : true;
+            return ! (value.toLowerCase() === 'false' || value === '0' || value === EMPTY_STRING);
         } else if (typeof value === 'number') {
             return (0 < value);
         }
@@ -115,13 +115,13 @@ function Sheet2Form() {
 
     var isNotNullValue = function (value) {
         return (value !== undefined && value !== null && value !== EMPTY_STRING);
-    }
+    };
 
     var callWithNotNullValue = function (value, callback) {
         if (isNotNullValue(value)) {
             callback(value);
         }
-    }
+    };
 
     const formMetadataHandlers = {
         form: function (context) {
@@ -187,14 +187,6 @@ function Sheet2Form() {
         showLinkToRespondAgain: function (context) {
             var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
             context.form.setShowLinkToRespondAgain(value);
-        },
-        shuffleQuestions: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setShuffleQuestions(value);
-        },
-        confirmationMessage: function (context) {
-            var confirmationMessage = context.row[COL_INDEX.META.MESSAGE];
-            context.form.setConfirmationMessage(confirmationMessage);
         },
         customClosedFormMessage: function (context) {
             var customClosedFormMessage = context.row[COL_INDEX.META.MESSAGE];
@@ -275,7 +267,7 @@ function Sheet2Form() {
             callWithBooleanValue(context.row[COL_INDEX.ITEM.Q.DATE.INCLUDES_YEAR], function (value) {
                 context.item.setIncludesYear(value);
             });
-        },
+        }
     };
 
     const itemPreprocessor = {

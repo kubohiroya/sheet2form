@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 function onOpen(event) {
     var ui = SpreadsheetApp.getUi();
@@ -17,7 +17,7 @@ function onEdit(event){
   var ss = event.source.getActiveSheet();
   var r = event.source.getActiveRange();
   //r.getColumn() == 
-  if(event.value == 'hoge'){
+  if(event.value == 'bbb'){
     //r.setBackground('#aaffaa');
   }else{
     //r.setBackground('#ffaaaa');

@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 function JsonToSheet() {
 
@@ -57,6 +57,6 @@ function JsonToSheet() {
 
     return {
         activeFormToSheet: activeFormToSheet,
-        openFormToSheet: openFormToSheet,
+        openFormToSheet: openFormToSheet
     };
 }

@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 function getMessages(category, locale) {
     var locale = locale ? locale : Session.getActiveUserLocale();
@@ -27,7 +27,7 @@ function getMessages_en(category) {
             '(blank to use active sheet)': '(blank to use active sheet)',
             'invalid sheet index': 'invalid sheet index',
             'form generation succeed.': 'form generation succeed.',
-            'form generation faild.': 'form generation faild.'
+            'form generation failed.': 'form generation failed.'
         }
     }[category];
 }
@@ -48,7 +48,7 @@ function getMessages_ja(category) {
             '(blank to use active sheet)': 'または空欄でアクティブなシートを指定',
             'invalid sheet index': '不正なインデックスです',
             'form generation succeed.': 'フォーム生成に成功しました。',
-            'form generation faild.': 'フォーム生成に失敗しました。'
+            'form generation failed.': 'フォーム生成に失敗しました。'
         }
     }[category];
 }
