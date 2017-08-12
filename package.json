@@ -8,7 +8,8 @@
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
-    "test": "mocha"
+      "upload": "node_modules/.bin/gapps upload",
+      "test": "mocha"
   },
   "repository": {
     "type": "git",
