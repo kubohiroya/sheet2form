@@ -1,3 +1,6 @@
+'use strict';
+/* global Browser, SpreadsheetApp */
+
 function createNewForm(){
   
   var messages = getMessages('ui');
@@ -39,7 +42,7 @@ function createNewForm(){
   function openSheet(spreadsheet){
     var step = '(Step 3 of 3)';
     if(1 < spreadsheet.getSheets().length){
-      var range = '0-'+(spreadsheet.getSheets().length-1);
+      var range = '0-'+(spreadsheet.getSheets().length - 1);
       var input = Browser.inputBox(inputBoxTitle+step, messages['input sheet index'] + ':' + range +'\\n'+
                                    messages['(blank to use active sheet)'], Browser.Buttons.OK_CANCEL);
       if(input === 'cancel'){
@@ -49,7 +52,7 @@ function createNewForm(){
         return spreadsheet.getActiveSheet();
       }
       var sheetIndex = parseInt(input, 10);
-      if(sheetIndex === NaN || sheetIndex < 0 || spreadsheet.getSheets().length <= sheetIndex){
+      if(sheetIndex < 0 || spreadsheet.getSheets().length <= sheetIndex){
         Browser.msgBox(messages['invalid sheet index']+':'+input);
         return openSheet(spreadsheet);
       }
@@ -69,6 +72,7 @@ function createNewForm(){
     showLinkToRespondAgain: true,
     shuffleQuestions: false,
     isQuiz: false
+
   };
   
   try{

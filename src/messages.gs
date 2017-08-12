@@ -1,7 +1,7 @@
-// 'use strict';
+'use strict';
 
-function getMessages(category, locale) {
-    var locale = locale ? locale : Session.getActiveUserLocale();
+function getMessages(category, _locale) {
+    var locale = _locale ? _locale : Session.getActiveUserLocale();
     switch (locale) {
         case 'ja':
             return getMessages_ja(category);
@@ -27,7 +27,14 @@ function getMessages_en(category) {
             '(blank to use active sheet)': '(blank to use active sheet)',
             'invalid sheet index': 'invalid sheet index',
             'form generation succeed.': 'form generation succeed.',
-            'form generation failed.': 'form generation failed.'
+            'form generation failed.': 'form generation failed.',
+            'import form': 'import form',
+            'input source form ID or URL': 'input source form ID or URL',
+            'input target spreadsheet ID or URL (blank to use active spreadsheet)':'input target spreadsheet ID or URL (blank to use active spreadsheet)',
+            'form import canceled': 'form import canceled',
+            'invalid form ID or URL': 'invalid form ID or URL',
+            'form import failed.': 'form import failed.',
+            'form import succeed.': 'form import succeed.'
         }
     }[category];
 }
@@ -48,7 +55,15 @@ function getMessages_ja(category) {
             '(blank to use active sheet)': 'または空欄でアクティブなシートを指定',
             'invalid sheet index': '不正なインデックスです',
             'form generation succeed.': 'フォーム生成に成功しました。',
-            'form generation failed.': 'フォーム生成に失敗しました。'
+            'form generation failed.': 'フォーム生成に失敗しました。',
+            'import form': 'フォームの読み込み',
+            'input source form ID or URL': 'フォームIDまたはURLを入力',
+            'input target spreadsheet ID or URL (blank to use active spreadsheet)':'スプレッドシートのIDまたはURLを入力\\n(空欄の入力でアクティブなスプレッドシートを指定)',
+            'form import canceled': 'フォームの読み込みをキャンセルしました。',
+            'invalid form ID or URL':'不正なIDまたはURLです',
+            'form import failed.': 'フォーム読み込みに失敗しました.',
+            'form import succeed.': 'フォーム読み込みに成功しました.'
+
         }
     }[category];
 }

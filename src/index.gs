@@ -1,4 +1,5 @@
-// 'use strict';
+'use strict';
+/* global SpreadsheetApp */
 
 function onOpen(event) {
     var ui = SpreadsheetApp.getUi();
@@ -9,6 +10,7 @@ function onOpen(event) {
     //.addItem(messages['initialize sheet'], 'initializeSheet')
     //.addItem(messages['validate sheet'],'validateSheet')
         .addItem(messages['create new form'], 'createNewForm')
+        .addItem(messages['import form'], 'importForm')
         .addToUi();
 }
 

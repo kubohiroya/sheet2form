@@ -1,17 +1,23 @@
-// 'use strict';
+'use strict';
+/* global FormApp, FormApp.ItemType */
 
 function Form2Json() {
 
     function choicesToJson(choice) {
-        return {
+        return Object_assign(Object_assign({
             value: choice.getValue()
-        };
+        }, (choice.isCorrectAnswer())? {
+            isCorrectAnswer: choice.isCorrectAnswer()
+        } : {}),
+            (choice.getPageNavigationType() !== null)? {
+            pageNavigationType: pageNavigationTypeToString(choice.getPageNavigationType())
+        } : {});
     }
 
     function userToJson(user) {
         return {
             email: user.getEmail()
-        }
+        };
     }
 
     function blobToJson(blob) {
@@ -71,16 +77,16 @@ function Form2Json() {
         }
     }
 
-    function formToJson(form) {
+    function convert(form) {
         var metadata = {
             isQuiz: form.isQuiz(),
-            isAcceptingResponses: form.isAcceptingResponses(),
-            isPublishingSummary: form.isPublishingSummary(),
+            acceptingResponses: form.isAcceptingResponses(),
+            publishingSummary: form.isPublishingSummary(),
             confirmationMessage: form.getConfirmationMessage(),
             customClosedFormMessage: form.getCustomClosedFormMessage(),
             description: form.getDescription(),
             editUrl: form.getEditUrl(),
-            editors: form.getEditors().map(userToJson),
+            editors: form.getEditors().map(userToJson).map(function(user){return user.email;}).join(', '),
             id: form.getId(),
             publishedUrl: form.getPublishedUrl(),
             shuffleQuestions: form.getShuffleQuestions(),
@@ -102,6 +108,7 @@ function Form2Json() {
 
     var types = {
         CHECKBOX: FormApp.ItemType.CHECKBOX,
+        CHECKBOX_GRID: FormApp.ItemType.CHECKBOX_GRID,
         DATE: FormApp.ItemType.DATE,
         DATETIME: FormApp.ItemType.DATETIME,
         DURATION: FormApp.ItemType.DURATION,
@@ -117,8 +124,9 @@ function Form2Json() {
         TIME: FormApp.ItemType.TIME
     };
 
-    var TYPE_NAMES = {
+    var TYPE_NAMES_UPPER = {
         CHECKBOX: 'CHECKBOX',
+        CHECKBOX_GRID: 'CHECKBOX_GRID',
         DATE: 'DATE',
         DATETIME: 'DATETIME',
         DURATION: 'DURATION',
@@ -134,10 +142,30 @@ function Form2Json() {
         TIME: 'TIME'
     };
 
+    var TYPE_NAMES = {
+        CHECKBOX: 'checkbox',
+        CHECKBOX_GRID: 'checkboxGrid',
+        DATE: 'date',
+        DATETIME: 'dateTime',
+        DURATION: 'duration',
+        GRID: 'grid',
+        IMAGE: 'image',
+        LIST: 'list',
+        MULTIPLE_CHOICE: 'multipleChoice',
+        PAGE_BREAK: 'pageBreak',
+        PARAGRAPH_TEXT: 'paragraphText',
+        SCALE: 'scale',
+        SECTION_HEADER: 'sectionHeader',
+        TEXT: 'text',
+        TIME: 'time'
+    };
+
     function getItemTypeName(item) {
         switch (item.getType()) {
             case FormApp.ItemType.CHECKBOX:
                 return TYPE_NAMES.CHECKBOX;
+            case FormApp.ItemType.CHECKBOX_GRID:
+                return TYPE_NAMES.CHECKBOX_GRID;
             case FormApp.ItemType.DATE:
                 return TYPE_NAMES.DATE;
             case FormApp.ItemType.DATETIME:
@@ -172,46 +200,49 @@ function Form2Json() {
     function getTypedItem(item) {
         var typeName = getItemTypeName(item);
         return {
-            CHECKBOX: function (item) {
+            checkbox: function (item) {
                 return item.asCheckboxItem();
             },
-            DATE: function (item) {
+            checkboxGrid: function (item) {
+                return item.asCheckboxGridItem();
+            },
+            date: function (item) {
                 return item.asDateItem();
             },
-            DATETIME: function (item) {
+            datetime: function (item) {
                 return item.asDateTimeItem();
             },
-            TIME: function (item) {
+            time: function (item) {
                 return item.asTimeItem();
             },
-            DURATION: function (item) {
+            duration: function (item) {
                 return item.asDurationItem();
             },
-            GRID: function (item) {
+            grid: function (item) {
                 return item.asGridItem();
             },
-            IMAGE: function (item) {
+            image: function (item) {
                 return item.asImageItem();
             },
-            LIST: function (item) {
+            list: function (item) {
                 return item.asListItem();
             },
-            MULTIPLE_CHOICE: function (item) {
+            multipleChoice: function (item) {
                 return item.asMultipleChoiceItem();
             },
-            PAGE_BREAK: function (item) {
+            pageBreak: function (item) {
                 return item.asPageBreakItem();
             },
-            PARAGRAPH_TEXT: function (item) {
+            paragraphText: function (item) {
                 return item.asParagraphTextItem();
             },
-            SCALE: function (item) {
+            scale: function (item) {
                 return item.asScaleItem();
             },
-            SECTION_HEADER: function (item) {
+            sectionHeader: function (item) {
                 return item.asSectionHeaderItem();
             },
-            TEXT: function (item) {
+            text: function (item) {
                 return item.asTextItem();
             }
         }[typeName](item);
@@ -310,6 +341,7 @@ function Form2Json() {
             case FormApp.ItemType.DURATION:
                 return createQuestionnaireItemWithGeneralFeedback(item);
 
+            case FormApp.ItemType.CHECKBOX_GRID:
             case FormApp.ItemType.GRID:
                 return createQuestionnaireItem(item, function (typedItem) {
                     return {
@@ -348,8 +380,17 @@ function Form2Json() {
             case FormApp.ItemType.IMAGE:
                 return createItem(item, function (typedItem) {
                     return {
-                        image: blobToString(typedItem.getImage()),
-                        alignment: alignmentToJson(typedItem.getAlignment()),
+                        image: blobToJson(typedItem.getImage()),
+                        alignment: alignmentToString(typedItem.getAlignment()),
+                        width: typedItem.getWidth()
+                    };
+                });
+
+            case FormApp.ItemType.VIDEO:
+                return createItem(item, function (typedItem) {
+                    return {
+                        videoUrl: undefined, //typedItem.getVideoUrl(),
+                        alignment: alignmentToString(typedItem.getAlignment()),
                         width: typedItem.getWidth()
                     };
                 });
@@ -373,6 +414,6 @@ function Form2Json() {
     }
 
     return {
-        formToJson: formToJson
+        convert: convert
     };
 }

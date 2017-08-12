@@ -1,4 +1,5 @@
 'use strict';
+/* global Logger */
 
 function Sheet2Form() {
 
@@ -125,9 +126,11 @@ function Sheet2Form() {
 
     const formMetadataHandlers = {
         form: function (context) {
+            /*
             var editUrl = context.row[COL_INDEX.META.EDIT_URL];
             var publishedUrl = context.row[COL_INDEX.META.PUBLISHED_URL];
             var summaryUrl = context.row[COL_INDEX.META.SUMMARY_URL];
+            */
             var range = context.sheet.getRange(context.rowIndex + 1, 1, 1, 1 + COL_INDEX.META.SUMMARY_URL);
             range.setValues([[
                 'form',
@@ -154,7 +157,7 @@ function Sheet2Form() {
         },
         shuffleQuestions: function (context) {
             var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setShuffileQuestions(value);
+            context.form.setShuffleQuestions(value);
         },
         acceptingResponses: function (context) {
             var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
@@ -188,9 +191,29 @@ function Sheet2Form() {
             var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
             context.form.setShowLinkToRespondAgain(value);
         },
+        confirmationMessage: function(context) {
+            var confirmationMessage = context.row[COL_INDEX.META.MESSAGE];
+            context.form.setConfirmationMessage(confirmationMessage);
+        },
         customClosedFormMessage: function (context) {
             var customClosedFormMessage = context.row[COL_INDEX.META.MESSAGE];
             context.form.setCustomClosedFormMessage(customClosedFormMessage);
+        },
+        editors: function(context){
+            var editors = context.row[COL_INDEX.META.MESSAGE].split(/,\s*/);
+            context.form.addEditors(editors);
+        },
+        id: function(context){
+            // do nothing
+        },
+        editUrl: function(context){
+            // do nothing
+        },
+        publishedUrl: function(context){
+            // do nothing
+        },
+        summaryUrl: function(context){
+            // do nothing
         }
     };
 
@@ -278,17 +301,21 @@ function Sheet2Form() {
         }
     };
 
+    var multipleChoiceHandler = function (context) {
+        context.item = context.form.addMultipleChoiceItem();
+        itemModifiers.choices(context);
+        itemModifiers.itemMetadata(context);
+        itemModifiers.questionMetadata(context);
+        itemModifiers.showOtherOption(context);
+        if (context.form.isQuiz()) {
+            itemModifiers.quizMetadata(context);
+        }
+    };
+
     const itemHandlers = {
-        radio: function (context) {
-            context.item = context.form.addMultipleChoiceItem();
-            itemModifiers.choices(context);
-            itemModifiers.itemMetadata(context);
-            itemModifiers.questionMetadata(context);
-            itemModifiers.showOtherOption(context);
-            if (context.form.isQuiz()) {
-                itemModifiers.quizMetadata(context);
-            }
-        },
+        radio: multipleChoiceHandler,
+
+        multipleChoice: multipleChoiceHandler,
 
         checkbox: function (context) {
             context.item = context.form.addCheckboxItem();
@@ -304,6 +331,27 @@ function Sheet2Form() {
         list: function (context) {
             context.item = context.form.addListItem();
             itemModifiers.choices(context);
+            itemModifiers.itemMetadata(context);
+            itemModifiers.questionMetadata(context);
+        },
+
+        checkboxGrid: function (context) {
+            var rowList = [], colList = [];
+            for (var rowIndex = context.rowIndex + 1; rowIndex < context.rows; rowIndex++) {
+                if (context.values[rowIndex][COL_INDEX.COMMAND] === EMPTY_STRING) {
+                    callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.ROW_LABEL], function (value) {
+                        rowList.push(value);
+                    });
+                    callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.COL_LABEL], function (value) {
+                        colList.push(value);
+                    });
+                } else {
+                    context.rowIndex = rowIndex - 1;
+                    break;
+                }
+            }
+            context.item = context.form.addCheckboxGridItem();
+            context.item.setRows(rowList).setColumns(colList);
             itemModifiers.itemMetadata(context);
             itemModifiers.questionMetadata(context);
         },
@@ -434,9 +482,11 @@ function Sheet2Form() {
             var feedback = FormApp.createFeedback();
             for (var rowIndex = context.rowIndex; rowIndex < context.rows; rowIndex++) {
                 var command = context.values[rowIndex][COL_INDEX.COMMAND];
+                var feedbackDisplayTextOrUrl = context.values[rowIndex][COL_INDEX.FEEDBACK.TEXT_OR_URL];
+                var feedbackDisplayText = context.values[rowIndex][COL_INDEX.FEEDBACK.DISPLAY_TEXT];
                 if ((command === 'feedback' && rowIndex === context.rowIndex) || !isNotNullValue(command)) {
-                    callWithNotNullValue(context.values[rowIndex][COL_INDEX.FEEDBACK.TEXT_OR_URL], function (value) {
-                        setFeedbackContent(feedback, value, context.values[rowIndex][COL_INDEX.FEEDBACK.DISPLAY_TEXT]);
+                    callWithNotNullValue(feedbackDisplayTextOrUrl, function (value) {
+                        setFeedbackContent(feedback, value, feedbackDisplayText);
                     });
                 } else {
                     context.rowIndex = rowIndex - 1;
@@ -518,6 +568,10 @@ function Sheet2Form() {
         form.setShowLinkToRespondAgain(formOptions.showLinkToRespondAgain);
         form.setShuffleQuestions(formOptions.shuffleQuestions);
         form.setIsQuiz(formOptions.isQuiz);
+        /*
+        form.setConfirmationMessage(formOptions.confirmationMessage);
+        form.setCustomClosedFormMessage(formOptions.customClosedFormMessage);
+        */
         var context = {
             editUrl: undefined,
             publishedUrl: undefined,
