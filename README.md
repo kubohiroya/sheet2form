@@ -12,4 +12,4 @@ Google Apps Script to convert Google Form from/to Google Spreadsheet
   
 * Copy a project property named 'Project Key' of the Standalone Script Project.
 * Setup using the library by pasting the 'Project Key' of the Standalone Project into `Resource-`>`Library`->`Adding Library` of your Container Bounded Script Project.  
-* Run the function 'createNew'
+* Run the function 'createNewForm' or 'importForm'
