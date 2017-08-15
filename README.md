@@ -1,5 +1,27 @@
 Google Apps Script to convert Google Form from/to Google Spreadsheet
 
+# Sample
+
+A Google Spreadsheet as follows can be automatically converted into a Google Forms like  
+
+ | | A | B | C | D | E |
+ |---|---|---|---|---|---|
+ |1|title| a sample form| | | 
+ |2|text| name | Please input your full-name. | TRUE | |
+ |3|multipleChoice | gender | Please select your gender.| TRUE | TRUE |
+ |4| | male | | |
+ |5| | female | | |
+ |6|checkbox| favorite season| Please select all of your favorite season|TRUE||
+ |7| | spring | | |
+ |8| | summer | | |
+ |9| | autumn | | |
+ |10| | winter | | |
+ |11|paragraphText| How do you feel like? |  |  | |
+  
+ 
+
+# Usage
+
 * Create a empty Google Spreadsheet file on you GoogleDrive.
 * Open ScriptEditor from the Spreadsheet and create a Container Bounded Script Project.
 * Add a new Google Apps Script file in the project by copying `./bridge.gs` file content of this repository.
