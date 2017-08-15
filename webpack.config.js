@@ -4,9 +4,9 @@ module.exports = {
         extensions: [".js", ".gs"]
     },
     context: __dirname,
-    entry: './main.js',
+    entry: './src/index.js',
     output: {
-	path: __dirname+'/dist',
+        path: __dirname+'/dist',
 	filename: 'code.gs'
     },
     plugins: [
