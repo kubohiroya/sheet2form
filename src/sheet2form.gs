@@ -597,3 +597,5 @@ function Sheet2Form() {
         itemCommands: itemHandlers
     };
 }
+
+module.exports = Sheet2Form;

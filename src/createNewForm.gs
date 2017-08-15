@@ -1,6 +1,9 @@
 'use strict';
 /* global Browser, SpreadsheetApp */
 
+var getMessages = require('./messages');
+var Sheet2Form = require('./sheet2form');
+
 function createNewForm(){
   
   var messages = getMessages('ui');
@@ -95,3 +98,4 @@ function createNewForm(){
   }
 }
 
+module.exports = createNewForm;

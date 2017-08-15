@@ -1,6 +1,6 @@
 'use strict';
 /* global SpreadsheetApp */
-
+var getMessages = require('./messages');
 function onOpen(event) {
     var ui = SpreadsheetApp.getUi();
 
@@ -13,7 +13,9 @@ function onOpen(event) {
         .addItem(messages['import form'], 'importForm')
         .addToUi();
 }
-
+module.exports = {
+    onOpen: onOpen
+};
 /*
 function onEdit(event){
   var ss = event.source.getActiveSheet();

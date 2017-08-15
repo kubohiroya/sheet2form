@@ -133,3 +133,4 @@ function Json2Sheet() {
         convert: convert
     };
 }
+module.exports = Json2Sheet;

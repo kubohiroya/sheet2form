@@ -417,3 +417,4 @@ function Form2Json() {
         convert: convert
     };
 }
+module.exports = Form2Json;

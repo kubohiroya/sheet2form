@@ -67,3 +67,4 @@ function getMessages_ja(category) {
         }
     }[category];
 }
+module.exports = getMessages;

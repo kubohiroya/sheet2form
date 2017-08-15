@@ -1,6 +1,10 @@
 'use strict';
 /* global Logger, Browser, SpreadsheetApp, FormApp */
 
+var getMessages = require('./messages');
+var Form2Json = require('./form2json');
+var Json2Sheet = require('./json2sheet');
+
 function importForm(){
   
   var messages = getMessages('ui');
@@ -90,3 +94,4 @@ function importForm(){
   }
 }
 
+module.exports = importForm;
