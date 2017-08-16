@@ -1,3 +1,5 @@
+# sheet2form
+
 Google Apps Script to convert Google Form from/to Google Spreadsheet.
 
 * exportForm: 
@@ -6,13 +8,15 @@ Google Apps Script to convert Google Form from/to Google Spreadsheet.
 * importForm:
    Import predefined Google Form items and preferences into your Google Spreadsheet content values in a certain format.
   
-### Warning: Incomplete interpretation caused by Google Forms API insufficiency
+### Limitations
+
+Warning: Incomplete interpretation caused by Google Forms API insufficiency.
 
  * see https://github.com/kubohiroya/sheet2form/issues
  
-# Example
+## Example
 
-## Google Spreadsheet content  
+#### Google Spreadsheet content as a source of Google Form
  
  | | A | B | C | D | E |
  |---|---|---|---|---|---|
@@ -50,32 +54,33 @@ More detailed usage and example are available at:
  These commands and props are almost compatible to Google Apps Script Forms Service API
 : https://developers.google.com/apps-script/reference/forms/
 
-# Getting Started
+## Getting Started
 
-## 1. Create an empty spreadsheet and its Container Bounded Script
+### 1. Create an empty spreadsheet and its Container Bounded Script
 
 * Create an empty Google Spreadsheet file on your GoogleDrive.
 * Open the ScriptEditor from the spreadsheet to create a Container Bounded Script Project.
 * Add a new Google Apps Script file in the project by copying `./bridge.gs` file content of this repository.
 
-## 2. Create a Standalone Script hosted on GitHub
+### 2. Create a Standalone Script hosted on GitHub
 
 * Create an empty Google Apps Script on your GoogleDrive as a Standalone Script Project Project.
 * Setup `node-google-apps-script` so as to create your credential file and `./gapps.config.json` file.
   cf. https://www.npmjs.com/package/node-google-apps-script
 * Build and Dist the library with `npm run build && npm run dist` 
 
-## 3. Bind the spreadsheet to the Standalone Script Project
+### 3. Bind the spreadsheet to the Standalone Script Project
 * In the Standalone Script Project, COPY the value of 'Project Key' project property.
 * In the Container Bounded Script Project, click `Resource` -> `Library` menu to open `Adding Library`, 
  PASTE the copy of 'Project Key', so as to setup your Standalone Script Project as the library referenced by `sheet2form` variable. 
 * Setup a trigger to execute function `onOpen` by spreadsheet event `onOpen`.
 
-# Usage 
-## `exportForm` 
+## Usage 
+### `exportForm` 
  * Create your own form definition in your Google Spreadsheet in the format as described above.
  * Execute the functions `exportForm` from customized menu in the spreadsheet UI.
-## `importForm`
+
+### `importForm`
 * COPY the URL of your pre-existed Google Form
 * Execute the function `importForm` from customized menu in the spreadsheet UI.
 * PASTE the URL in opened dialog, then click OK.
