@@ -6,15 +6,13 @@ function Sheet2Form() {
     var COL_INDEX = {
         COMMAND: 0,
         META: {
-            EDIT_URL: 1,
-            PUBLISHED_URL: 2,
-            SUMMARY_URL: 3,
-
+            ID: 1,
             VERSION: 1,
             TITLE: 1,
             DESCRIPTION: 1,
             MESSAGE: 1,
-            BOOLEAN: 1
+            BOOLEAN: 1,
+            URL: 1
         },
         ITEM: {
             TITLE: 1,
@@ -124,84 +122,124 @@ function Sheet2Form() {
         }
     };
 
-    const formMetadataHandlers = {
-        form: function (context) {
-            /*
-            var editUrl = context.row[COL_INDEX.META.EDIT_URL];
-            var publishedUrl = context.row[COL_INDEX.META.PUBLISHED_URL];
-            var summaryUrl = context.row[COL_INDEX.META.SUMMARY_URL];
-            */
-            var range = context.sheet.getRange(context.rowIndex + 1, 1, 1, 1 + COL_INDEX.META.SUMMARY_URL);
-            range.setValues([[
-                'form',
-                context.form.getEditUrl(),
-                context.form.getPublishedUrl(),
-                context.form.getSummaryUrl()
-            ]]);
-        },
+    const formMetadataRetrievers = {
         version: function (context) {
-            context.version = context.row[COL_INDEX.META.VERSION];
+            context.formOptions.version = context.row[COL_INDEX.META.VERSION];
+        },
+        title: function (context) {
+            context.formOptions.title = context.row[COL_INDEX.META.TITLE];
+        },
+        description: function (context) {
+            context.formOptions.description = context.row[COL_INDEX.META.DESCRIPTION];
+        },
+        isQuiz: function (context) {
+            context.formOptions.isQuiz = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        shuffleQuestions: function (context) {
+            context.formOptions.shuffleQuestions = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        acceptingResponses: function (context) {
+            context.formOptions.acceptingResponses = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        allowResponseEdits: function (context) {
+            context.formOptions.allowResponseEdits = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        collectEmail: function (context) {
+            context.formOptions.collectEmail = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        limitOneResponsePerUser: function (context) {
+            context.formOptions.limitOneResponsePerUser = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        progressBar: function (context) {
+            context.formOptions.progressBar = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        publishingSummary: function (context) {
+            context.formOptions.publishingSummary = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        requireLogin: function (context) {
+            context.formOptions.requireLogin = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        showLinkToRespondAgain: function (context) {
+            context.formOptions.showLinkToRespondAgain = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        confirmationMessage: function(context) {
+            context.formOptions.confirmationMessage = context.row[COL_INDEX.META.MESSAGE];
+        },
+        customClosedFormMessage: function (context) {
+            context.formOptions.customClosedFormMessage = context.row[COL_INDEX.META.MESSAGE];
+        },
+        editors: function(context){
+            context.formOptions.editors = context.row[COL_INDEX.META.MESSAGE].split(/,\s*/);
+        },
+        id: function(context){
+            context.formOptions.id = context.row[COL_INDEX.META.ID];
+            context.rowIndexKey.id = context.rowIndex;
+        },
+        editUrl: function(context){
+            context.formOptions.editUrl = context.row[COL_INDEX.META.URL];
+            context.rowIndexKey.editUrl = context.rowIndex;
+        },
+        publishedUrl: function(context){
+            context.formOptions.publishedUrl = context.row[COL_INDEX.META.URL];
+            context.rowIndexKey.publishedUrl = context.rowIndex;
+        },
+        summaryUrl: function(context){
+            context.formOptions.summaryUrl = context.row[COL_INDEX.META.URL];
+            context.rowIndexKey.summaryUrl = context.rowIndex;
+        }
+    };
+
+    const formMetadataHandlers = {
+        version: function (context) {
+            context.version = context.formOptions.version;
             if (context.version !== '1' && context.version !== 1) {
                 // throw "ERROR! Invalid Version: " + context.version;
             }
         },
         title: function (context) {
-            context.form.setTitle(context.row[COL_INDEX.META.TITLE])
+            context.form.setTitle(context.formOptions.title)
         },
         description: function (context) {
-            context.form.setDescription(context.row[COL_INDEX.META.DESCRIPTION])
+            context.form.setDescription(context.formOptions.description)
         },
         isQuiz: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setIsQuiz(value);
+            context.form.setIsQuiz(context.formOptions.isQuiz);
         },
         shuffleQuestions: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setShuffleQuestions(value);
+            context.form.setShuffleQuestions(context.formOptions.shuffleQuestions);
         },
         acceptingResponses: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setAcceptingResponses(value);
+            context.form.setAcceptingResponses(context.formOptions.acceptingResponses);
         },
         allowResponseEdits: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setAllowResponseEdits(value);
+            context.form.setAllowResponseEdits(context.formOptions.allowResponseEdits);
         },
         collectEmail: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setCollectEmail(value);
+            context.form.setCollectEmail(context.formOptions.collectEmail);
         },
         limitOneResponsePerUser: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setLimitOneResponsePerUser(value);
+            context.form.setLimitOneResponsePerUser(context.formOptions.limitOneResponsePerUser);
         },
         progressBar: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setProgressBar(value);
+            context.form.setProgressBar(context.formOptions.progressBar);
         },
         publishingSummary: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setPublishingSummary(value);
+            context.form.setPublishingSummary(context.formOptions.publishingSummary);
         },
         requireLogin: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setRequireLogin(value);
+            context.form.setRequireLogin(context.formOptions.requireLogin);
         },
         showLinkToRespondAgain: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setShowLinkToRespondAgain(value);
+            context.form.setShowLinkToRespondAgain(context.formOptions.showLinkToRespondAgain);
         },
         confirmationMessage: function(context) {
-            var confirmationMessage = context.row[COL_INDEX.META.MESSAGE];
-            context.form.setConfirmationMessage(confirmationMessage);
+            context.form.setConfirmationMessage(context.formOptions.confirmationMessage);
         },
         customClosedFormMessage: function (context) {
-            var customClosedFormMessage = context.row[COL_INDEX.META.MESSAGE];
-            context.form.setCustomClosedFormMessage(customClosedFormMessage);
+            context.form.setCustomClosedFormMessage(context.formOptions.customClosedFormMessage);
         },
         editors: function(context){
-            var editors = context.row[COL_INDEX.META.MESSAGE].split(/,\s*/);
-            context.form.addEditors(editors);
+            context.form.addEditors(context.formOptions.editors);
         },
         id: function(context){
             // do nothing
@@ -529,9 +567,22 @@ function Sheet2Form() {
                 break;
             } else if (command.charAt(0) === '#' || command == 'comment') {
                 continue;
-            } else if (formMetadataHandlers[command]) {
-                formMetadataHandlers[command](context);
+            } else if (formMetadataRetrievers[command]) {
+                formMetadataRetrievers[command](context);
             } else if (itemHandlers[command]) {
+                if (context.form === null){
+                    if (context.formOptions.id) {
+                        context.form = FormApp.openById(context.formOptions.id);
+                        Logger.log('reuse:'+context.form.getId());
+                    } else {
+                        context.form = FormApp.create(context.formOptions.title);
+                        updateCellValues(context);
+                    }
+                    setFormMetadata(context.form, context.formOptionsDefault);
+                    Object.keys(context.formOptions).forEach(function(command){
+                        formMetadataHandlers[command](context);
+                    });
+                }
                 itemHandlers[command](context);
             } else {
                 var errorMessage = 'ERROR in row #' + context.rowIndex + '\t' + context.row.join('\t');
@@ -542,32 +593,61 @@ function Sheet2Form() {
         return endState(context);
     }
 
+    function updateCellValues(context){
+        Object.keys(context.rowIndexKey).forEach(function(key){
+           var rowIndex = context.rowIndexKey[key];
+           if(0 <= rowIndex){
+               var value = null;
+               switch(key) {
+                   case 'id':
+                       value = context.form.getId();
+                       break;
+                   case 'editUrl':
+                       value = context.form.getEditUrl();
+                       break;
+                   case 'publishedUrl':
+                       value = context.form.getPublishedUrl();
+                       break;
+                   case 'summaryUrl':
+                       value = context.form.getSummaryUrl();
+                       break;
+               }
+               context.sheet.getRange(rowIndex + 1, 2).setValue(value);
+           }
+        });
+    }
+
     function endState(context) {
         return context.form;
     }
 
-    var convert = function (sheet, formTitle, formOptions) {
-        var form = FormApp.create(formTitle);
-        form.setAcceptingResponses(formOptions.acceptingResponses);
-        form.setAllowResponseEdits(formOptions.allowResponseEdits);
-        form.setCollectEmail(formOptions.collectEmail);
-        form.setLimitOneResponsePerUser(formOptions.limitOneResponsePerUser);
-        form.setProgressBar(formOptions.progressBar);
-        form.setPublishingSummary(formOptions.publishingSummary);
-        form.setRequireLogin(formOptions.requireLogin);
-        form.setShowLinkToRespondAgain(formOptions.showLinkToRespondAgain);
-        form.setShuffleQuestions(formOptions.shuffleQuestions);
-        form.setIsQuiz(formOptions.isQuiz);
+    function setFormMetadata(form, formOptionsDefault){
+        form.setAcceptingResponses(formOptionsDefault.acceptingResponses);
+        form.setAllowResponseEdits(formOptionsDefault.allowResponseEdits);
+        form.setCollectEmail(formOptionsDefault.collectEmail);
+        form.setLimitOneResponsePerUser(formOptionsDefault.limitOneResponsePerUser);
+        form.setProgressBar(formOptionsDefault.progressBar);
+        form.setPublishingSummary(formOptionsDefault.publishingSummary);
+        form.setRequireLogin(formOptionsDefault.requireLogin);
+        form.setShowLinkToRespondAgain(formOptionsDefault.showLinkToRespondAgain);
+        form.setShuffleQuestions(formOptionsDefault.shuffleQuestions);
+        form.setIsQuiz(formOptionsDefault.isQuiz);
         /*
-        form.setConfirmationMessage(formOptions.confirmationMessage);
-        form.setCustomClosedFormMessage(formOptions.customClosedFormMessage);
+        form.setConfirmationMessage(formOptionsDefault.confirmationMessage);
+        form.setCustomClosedFormMessage(formOptionsDefault.customClosedFormMessage);
         */
+    }
+
+    var convert = function (sheet, formTitle, formOptionsDefault) {
         var context = {
             editUrl: undefined,
             publishedUrl: undefined,
             summaryUrl: undefined,
             version: '1',
-            form: form,
+            form: null,
+            formOptionsDefault: formOptionsDefault,
+            formOptions: {title: formTitle},
+            rowIndexKey: {},
             sheet: sheet,
             cols: sheet.getLastColumn(),
             rows: sheet.getLastRow(),
