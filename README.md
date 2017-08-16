@@ -40,11 +40,11 @@ Warning: Incomplete interpretation caused by Google Forms API insufficiency.
  |18| | winter | | |
   
 Each row in this Google Spreadsheet is for creating form item:
- * Row 1-8: to set a form configuration(isQuiz, acceptingResponses, publishingSummary, confirmationMessage, customClosedMessage, description, title, )
- * Row 9-18: to create a form item (text, paragraphText, multipleChoice, checkbox)
+ * Row 1-7: to set a form configuration(`title`, `description`, `id`, `isQuiz`, `shuffleQuestions`, `acceptingResponses`, `publishingSummary` )
+ * Row 8-18: to create a form item (`sectionHeader`, `text`, `paragraphText`, `multipleChoice`, `checkbox`)
  * Row 12-13, 15-18: to create choices of multiple selection item
  
- * Row 3: id field will be set in process of spreadsheet to form conversion.
+ * Row 3: The empty `id` field will be set with the newly generated form id in process of converting from spreadsheet to form.
  
 More detailed usage and example are available at:
   
@@ -81,7 +81,9 @@ More detailed usage and example are available at:
 ### `exportForm` 
  * Create your own form definition in your Google Spreadsheet in the format as described above.
  * Execute the functions `exportForm` from customized menu in the spreadsheet UI.
-
+ * The `id` row with empty value will be set with the newly generated form id in process of converting from spreadsheet to form. In the similar way, the values of `editUrl` row, `publishedUrl` row or `summaryUrl` rows will be set.
+ * If an `id` row with actual(not-empty) value exists and its related form can be opened by the Google Forms API method `FormApp.openById`, the related form will be reused as the exporting target.
+ 
 ### `importForm`
 * COPY the URL of your pre-existed Google Form
 * Execute the function `importForm` from customized menu in the spreadsheet UI.
