@@ -141,8 +141,8 @@ function Sheet2Form() {
         },
         version: function (context) {
             context.version = context.row[COL_INDEX.META.VERSION];
-            if (context.version !== '1') {
-                throw "ERROR! Invalid Version: " + context.version;
+            if (context.version !== '1' && context.version !== 1) {
+                // throw "ERROR! Invalid Version: " + context.version;
             }
         },
         title: function (context) {
@@ -237,7 +237,7 @@ function Sheet2Form() {
                 if (context.values[rowIndex][COL_INDEX.COMMAND] === EMPTY_STRING) {
                     itemList.push({
                         label: context.values[rowIndex][COL_INDEX.ITEM.Q.CHOICE.ITEM.LABEL],
-                        isCorrectAnswer: context.values[rowIndex][COL_INDEX.ITEM.Q.CHOICE.ITEM.IS_CORRECT_ANSWER],
+                        isCorrectAnswer: booleanValue(context.values[rowIndex][COL_INDEX.ITEM.Q.CHOICE.ITEM.IS_CORRECT_ANSWER]),
                         navigation: context.values[rowIndex][COL_INDEX.ITEM.Q.CHOICE.ITEM.NAVIGATION]
                     });
                 } else {
@@ -312,6 +312,26 @@ function Sheet2Form() {
         }
     };
 
+    var gridHandler = function(context){
+        var rowList = [], colList = [];
+        for (var rowIndex = context.rowIndex + 1; rowIndex < context.rows; rowIndex++) {
+            if (context.values[rowIndex][COL_INDEX.COMMAND] === EMPTY_STRING) {
+                callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.ROW_LABEL], function (value) {
+                    rowList.push(value);
+                });
+                callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.COL_LABEL], function (value) {
+                    colList.push(value);
+                });
+            } else {
+                context.rowIndex = rowIndex - 1;
+                break;
+            }
+        }
+        context.item.setRows(rowList).setColumns(colList);
+        itemModifiers.itemMetadata(context);
+        itemModifiers.questionMetadata(context);
+    };
+
     const itemHandlers = {
         radio: multipleChoiceHandler,
 
@@ -336,45 +356,13 @@ function Sheet2Form() {
         },
 
         checkboxGrid: function (context) {
-            var rowList = [], colList = [];
-            for (var rowIndex = context.rowIndex + 1; rowIndex < context.rows; rowIndex++) {
-                if (context.values[rowIndex][COL_INDEX.COMMAND] === EMPTY_STRING) {
-                    callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.ROW_LABEL], function (value) {
-                        rowList.push(value);
-                    });
-                    callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.COL_LABEL], function (value) {
-                        colList.push(value);
-                    });
-                } else {
-                    context.rowIndex = rowIndex - 1;
-                    break;
-                }
-            }
             context.item = context.form.addCheckboxGridItem();
-            context.item.setRows(rowList).setColumns(colList);
-            itemModifiers.itemMetadata(context);
-            itemModifiers.questionMetadata(context);
+            gridHandler(context);
         },
 
         grid: function (context) {
-            var rowList = [], colList = [];
-            for (var rowIndex = context.rowIndex + 1; rowIndex < context.rows; rowIndex++) {
-                if (context.values[rowIndex][COL_INDEX.COMMAND] === EMPTY_STRING) {
-                    callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.ROW_LABEL], function (value) {
-                        rowList.push(value);
-                    });
-                    callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.COL_LABEL], function (value) {
-                        colList.push(value);
-                    });
-                } else {
-                    context.rowIndex = rowIndex - 1;
-                    break;
-                }
-            }
             context.item = context.form.addGridItem();
-            context.item.setRows(rowList).setColumns(colList);
-            itemModifiers.itemMetadata(context);
-            itemModifiers.questionMetadata(context);
+            gridHandler(context);
         },
 
         time: function (context) {
@@ -539,7 +527,7 @@ function Sheet2Form() {
             var command = context.row[COL_INDEX.COMMAND];
             if (command === '' || command === 'end') {
                 break;
-            } else if (command === '#' || command == 'comment') {
+            } else if (command.charAt(0) === '#' || command == 'comment') {
                 continue;
             } else if (formMetadataHandlers[command]) {
                 formMetadataHandlers[command](context);
