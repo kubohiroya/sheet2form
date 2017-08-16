@@ -71,5 +71,11 @@ More detailed usage and example are available at:
  PASTE the copy of 'Project Key', so as to setup your Standalone Script Project as the library referenced by `sheet2form` variable. 
 * Setup a trigger to execute function `onOpen` by spreadsheet event `onOpen`.
 
-## 4. Execute `createNewForm` or `importForm`
-* Execute the functions `createNewForm` or `importForm` from customized menu in the spreadsheet UI.
+# Usage 
+## `createNewForm` 
+ * Create your own form definition in your Google Spreadsheet in the format as described above.
+ * Execute the functions `createNewForm` from customized menu in the spreadsheet UI.
+## `importForm`
+* COPY the URL of your pre-existed Google Form
+* Execute the function `importForm` from customized menu in the spreadsheet UI.
+* PASTE the URL in opened dialog, then click OK.
