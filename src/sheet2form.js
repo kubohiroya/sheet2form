@@ -537,8 +537,10 @@ function Sheet2Form() {
             Logger.log('row:' + context.rowIndex);
             context.row = context.values[context.rowIndex];
             var command = context.row[COL_INDEX.COMMAND];
-            if (command === '') {
+            if (command === '' || command === 'end') {
                 break;
+            } else if (command === '#' || command == 'comment') {
+                continue;
             } else if (formMetadataHandlers[command]) {
                 formMetadataHandlers[command](context);
             } else if (itemHandlers[command]) {
