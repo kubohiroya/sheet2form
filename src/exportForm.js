@@ -3,14 +3,26 @@
 
 var getMessages = require('./messages');
 var Sheet2Form = require('./sheet2form');
+var messages = getMessages('ui');
+var formOptions = {
+    acceptingResponses: true,
+    allowResponseEdits: true,
+    collectEmail: true,
+    limitOneResponsePerUser: true,
+    progressBar: true,
+    publishingSummary: true,
+    requireLogin: true,
+    showLinkToRespondAgain: true,
+    shuffleQuestions: false,
+    isQuiz: false
 
-function createNewForm(){
-  
-  var messages = getMessages('ui');
+};
+
+function exportFormWithDialog(){
 
   var inputBoxTitle = messages['export form'];
   
-  function inputFormTitle(){
+  function inputFormTitleWithDialog(){
     var step = '(Step 1 of 3)';
     var formTitle = Browser.inputBox(inputBoxTitle+step, messages['form title'], Browser.Buttons.OK_CANCEL);
     if(formTitle === 'cancel'){
@@ -21,7 +33,7 @@ function createNewForm(){
     return formTitle;
   }
   
-  function openSpreadsheet(){
+  function openSpreadsheetWithDialog(){
     var step = '(Step 2 of 3)';
     var input = Browser.inputBox(inputBoxTitle+step, messages['input source spreadsheet ID or URL (blank to use active spreadsheet)'], Browser.Buttons.OK_CANCEL);
     if(input === 'cancel'){
@@ -37,12 +49,12 @@ function createNewForm(){
     }
     if(! spreadsheet){
       Browser.msgBox(messages['invalid spreadsheet ID or URL']+': '+input);
-      return openSpreadsheet();
+      return openSpreadsheetWithDialog();
     }
     return spreadsheet;
   }
   
-  function openSheet(spreadsheet){
+  function openSheetWithDialog(spreadsheet){
     var step = '(Step 3 of 3)';
     if(1 < spreadsheet.getSheets().length){
       var range = '0-'+(spreadsheet.getSheets().length - 1);
@@ -57,45 +69,52 @@ function createNewForm(){
       var sheetIndex = parseInt(input, 10);
       if(sheetIndex < 0 || spreadsheet.getSheets().length <= sheetIndex){
         Browser.msgBox(messages['invalid sheet index']+':'+input);
-        return openSheet(spreadsheet);
+        return openSheetWithDialog(spreadsheet);
       }
       return spreadsheet.getSheets()[sheetIndex]
     }
     return spreadsheet.getActiveSheet();
   }
 
-  var formOptions = {
-    acceptingResponses: true,
-    allowResponseEdits: true,
-    collectEmail: true,
-    limitOneResponsePerUser: true,
-    progressBar: true,
-    publishingSummary: true,
-    requireLogin: true,
-    showLinkToRespondAgain: true,
-    shuffleQuestions: false,
-    isQuiz: false
+    try{
+        var formTitle = inputFormTitleWithDialog();
+        var sheet = openSheetWithDialog(openSpreadsheetWithDialog());
+        var sheet2form = new Sheet2Form();
+        var form = sheet2form.convert(sheet, formTitle, formOptions);
 
-  };
-  
-  try{
-    var formTitle = inputFormTitle();
-    var sheet = openSheet(openSpreadsheet());
-    var sheet2form = new Sheet2Form();
-    var form = sheet2form.convert(sheet, formTitle, formOptions);  
-    
-    var file = DriveApp.getFileById(form.getId());
-    file.setName(form.getTitle());
-    
-    Browser.msgBox(messages['form export succeed.']+'\\n'+
-                  'URL: \\n'+form.shortenFormUrl(form.getPublishedUrl()));
-  }catch(exception){
-    Logger.log(exception);
-    if(exception.stack){
-      Logger.log(exception.stack);
+        var file = DriveApp.getFileById(form.getId());
+        file.setName(form.getTitle());
+
+        Browser.msgBox(messages['form export succeed.']+'\\n'+
+            'URL: \\n'+form.shortenFormUrl(form.getPublishedUrl()));
+    }catch(exception){
+        Logger.log(exception);
+        if(exception.stack){
+            Logger.log(exception.stack);
+        }
+        Browser.msgBox(messages['form export failed.']+'\\n'+JSON.stringify(exception, null, ' '));
     }
-    Browser.msgBox(messages['form export failed.']+'\\n'+JSON.stringify(exception, null, ' '));
-  }
 }
 
-module.exports = createNewForm;
+function exportForm(){
+    try{
+        var sheet = SpreadsheetApp.getActiveSheet();
+        var sheet2form = new Sheet2Form();
+        var form = sheet2form.convert(sheet, undefined, formOptions);
+        var file = DriveApp.getFileById(form.getId());
+        file.setName(form.getTitle());
+        Browser.msgBox(messages['form export succeed.']+'\\n'+
+            'URL: \\n'+form.shortenFormUrl(form.getPublishedUrl()));
+    }catch(exception){
+        Logger.log(exception);
+        if(exception.stack){
+            Logger.log(exception.stack);
+        }
+        Browser.msgBox(messages['form export failed.']+'\\n'+JSON.stringify(exception, null, ' '));
+    }
+}
+
+module.exports = {
+    exportFormWithDialog: exportFormWithDialog,
+    exportForm: exportForm
+};

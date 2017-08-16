@@ -8,7 +8,9 @@ function onOpen(event) {
 
     ui.createMenu(messages['Form I/O'])
         .addItem(messages['export form'], 'exportForm')
+        .addItem(messages['export form']+'...', 'exportFormWithDialog')
         .addItem(messages['import form'], 'importForm')
+        .addItem(messages['import form']+'...', 'importFormWithDialog')
         .addToUi();
 }
 module.exports = {

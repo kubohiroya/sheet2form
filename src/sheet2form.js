@@ -573,6 +573,10 @@ function Sheet2Form() {
                 if (context.form === null){
                     if (context.formOptions.id) {
                         context.form = FormApp.openById(context.formOptions.id);
+                        var numItems = context.form.getItems().length;
+                        for(var index = numItems - 1; 0 <= index; index--){
+                            context.form.deleteItem(index);
+                        }
                         Logger.log('reuse:'+context.form.getId());
                     } else {
                         context.form = FormApp.create(context.formOptions.title);

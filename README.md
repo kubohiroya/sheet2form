@@ -56,7 +56,7 @@ More detailed usage and example are available at:
  These commands and props are almost compatible to Google Apps Script Forms Service API
 : https://developers.google.com/apps-script/reference/forms/
 
-## Getting Started
+## Installation
 
 ### 1. Create an empty spreadsheet and its Container Bounded Script
 

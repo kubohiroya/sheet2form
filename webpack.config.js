@@ -7,9 +7,9 @@ module.exports = {
     entry: './src/index.js',
     output: {
         path: __dirname+'/dist',
-	filename: 'code.gs'
+        filename: 'sheet2form.gs'
     },
     plugins: [
-	new GasPlugin()
+        new GasPlugin()
     ]
 }
