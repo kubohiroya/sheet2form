@@ -8,13 +8,13 @@ function createNewForm(){
   
   var messages = getMessages('ui');
 
-  var inputBoxTitle = messages['create new form'];
+  var inputBoxTitle = messages['export form'];
   
   function inputFormTitle(){
     var step = '(Step 1 of 3)';
     var formTitle = Browser.inputBox(inputBoxTitle+step, messages['form title'], Browser.Buttons.OK_CANCEL);
     if(formTitle === 'cancel'){
-      throw messages['form generation canceled'];
+      throw messages['form export canceled'];
     }else if(formTitle === ''){
       return messages['new form'];
     }
@@ -25,7 +25,7 @@ function createNewForm(){
     var step = '(Step 2 of 3)';
     var input = Browser.inputBox(inputBoxTitle+step, messages['input source spreadsheet ID or URL (blank to use active spreadsheet)'], Browser.Buttons.OK_CANCEL);
     if(input === 'cancel'){
-      throw messages['form generation canceled'];
+      throw messages['form export canceled'];
     }
     var spreadsheet = null;
     if(input === ''){
@@ -49,7 +49,7 @@ function createNewForm(){
       var input = Browser.inputBox(inputBoxTitle+step, messages['input sheet index'] + ':' + range +'\\n'+
                                    messages['(blank to use active sheet)'], Browser.Buttons.OK_CANCEL);
       if(input === 'cancel'){
-        throw messages['form generation canceled'];
+        throw messages['form export canceled'];
       }
       if(input === ''){
         return spreadsheet.getActiveSheet();
@@ -87,14 +87,14 @@ function createNewForm(){
     var file = DriveApp.getFileById(form.getId());
     file.setName(form.getTitle());
     
-    Browser.msgBox(messages['form generation succeed.']+'\\n'+
+    Browser.msgBox(messages['form export succeed.']+'\\n'+
                   'URL: \\n'+form.shortenFormUrl(form.getPublishedUrl()));
   }catch(exception){
     Logger.log(exception);
     if(exception.stack){
       Logger.log(exception.stack);
     }
-    Browser.msgBox(messages['form generation failed.']+'\\n'+JSON.stringify(exception, null, ' '));
+    Browser.msgBox(messages['form export failed.']+'\\n'+JSON.stringify(exception, null, ' '));
   }
 }
 
