@@ -1,4 +1,4 @@
-function createNewForm() {
+function exportForm() {
 }
 function importForm() {
 }
@@ -92,20 +92,21 @@ function getMessages(category, _locale) {
 function getMessages_en(category) {
     return {
         ui: {
-            'create form': 'create form',
+            'Form I/O': 'Form I/O',
+            'export form': 'export form',
             'initialize sheet': 'initialize sheet',
             'validate sheet': 'validate sheet',
-            'create new form': 'create new form',
+            'export form from sheet': 'export form from sheet',
             'form title': 'form title',
-            'form generation canceled': 'form generation canceled',
+            'form export canceled': 'form export canceled',
             'new form': 'new form',
             'input source spreadsheet ID or URL (blank to use active spreadsheet)': 'input source spreadsheet ID or URL (blank to use active spreadsheet)',
             'invalid spreadsheet ID or URL': 'invalid spreadsheet ID or URL',
             'input sheet index': 'input sheet index',
             '(blank to use active sheet)': '(blank to use active sheet)',
             'invalid sheet index': 'invalid sheet index',
-            'form generation succeed.': 'form generation succeed.',
-            'form generation failed.': 'form generation failed.',
+            'form export succeed.': 'form export succeed.',
+            'form export failed.': 'form export failed.',
             'import form': 'import form',
             'input source form ID or URL': 'input source form ID or URL',
             'input target spreadsheet ID or URL (blank to use active spreadsheet)':'input target spreadsheet ID or URL (blank to use active spreadsheet)',
@@ -120,20 +121,21 @@ function getMessages_en(category) {
 function getMessages_ja(category) {
     return {
         ui: {
-            'create form': 'フォーム生成',
+            'Form I/O': 'Form I/O',
+            'export form': 'フォームの書き出し',
             'initialize sheet': 'シートの初期化・読み込み',
             'validate sheet': 'シートの構造を検証する',
-            'create new form': 'シート内容からフォームを生成する',
+            'export form from sheet': 'シート内容からフォームを生成する',
             'form title': 'フォームのタイトル',
-            'form generation canceled': 'フォーム生成をキャンセルしました。',
+            'form export canceled': 'フォーム生成をキャンセルしました。',
             'new form': '新しいフォーム',
             'input source spreadsheet ID or URL (blank to use active spreadsheet)': 'スプレッドシートのIDまたはURLを入力\\n(空欄の入力でアクティブなスプレッドシートを指定)',
             'invalid spreadsheet ID or URL': '不正なIDまたはURLです',
             'input sheet index': '利用するシートのインデックスを数値で指定',
             '(blank to use active sheet)': 'または空欄でアクティブなシートを指定',
             'invalid sheet index': '不正なインデックスです',
-            'form generation succeed.': 'フォーム生成に成功しました。',
-            'form generation failed.': 'フォーム生成に失敗しました。',
+            'form export succeed.': 'フォーム生成に成功しました。',
+            'form export failed.': 'フォーム生成に失敗しました。',
             'import form': 'フォームの読み込み',
             'input source form ID or URL': 'フォームIDまたはURLを入力',
             'input target spreadsheet ID or URL (blank to use active spreadsheet)':'スプレッドシートのIDまたはURLを入力\\n(空欄の入力でアクティブなスプレッドシートを指定)',
@@ -190,13 +192,13 @@ function createNewForm(){
   
   var messages = getMessages('ui');
 
-  var inputBoxTitle = messages['create new form'];
+  var inputBoxTitle = messages['export form'];
   
   function inputFormTitle(){
     var step = '(Step 1 of 3)';
     var formTitle = Browser.inputBox(inputBoxTitle+step, messages['form title'], Browser.Buttons.OK_CANCEL);
     if(formTitle === 'cancel'){
-      throw messages['form generation canceled'];
+      throw messages['form export canceled'];
     }else if(formTitle === ''){
       return messages['new form'];
     }
@@ -207,7 +209,7 @@ function createNewForm(){
     var step = '(Step 2 of 3)';
     var input = Browser.inputBox(inputBoxTitle+step, messages['input source spreadsheet ID or URL (blank to use active spreadsheet)'], Browser.Buttons.OK_CANCEL);
     if(input === 'cancel'){
-      throw messages['form generation canceled'];
+      throw messages['form export canceled'];
     }
     var spreadsheet = null;
     if(input === ''){
@@ -231,7 +233,7 @@ function createNewForm(){
       var input = Browser.inputBox(inputBoxTitle+step, messages['input sheet index'] + ':' + range +'\\n'+
                                    messages['(blank to use active sheet)'], Browser.Buttons.OK_CANCEL);
       if(input === 'cancel'){
-        throw messages['form generation canceled'];
+        throw messages['form export canceled'];
       }
       if(input === ''){
         return spreadsheet.getActiveSheet();
@@ -269,14 +271,14 @@ function createNewForm(){
     var file = DriveApp.getFileById(form.getId());
     file.setName(form.getTitle());
     
-    Browser.msgBox(messages['form generation succeed.']+'\\n'+
+    Browser.msgBox(messages['form export succeed.']+'\\n'+
                   'URL: \\n'+form.shortenFormUrl(form.getPublishedUrl()));
   }catch(exception){
     Logger.log(exception);
     if(exception.stack){
       Logger.log(exception.stack);
     }
-    Browser.msgBox(messages['form generation failed.']+'\\n'+JSON.stringify(exception, null, ' '));
+    Browser.msgBox(messages['form export failed.']+'\\n'+JSON.stringify(exception, null, ' '));
   }
 }
 
@@ -398,10 +400,8 @@ function onOpen(event) {
 
     var messages = getMessages('ui');
 
-    ui.createMenu(messages['create form'])
-    //.addItem(messages['initialize sheet'], 'initializeSheet')
-    //.addItem(messages['validate sheet'],'validateSheet')
-        .addItem(messages['create new form'], 'createNewForm')
+    ui.createMenu(messages['Form I/O'])
+        .addItem(messages['export form'], 'exportForm')
         .addItem(messages['import form'], 'importForm')
         .addToUi();
 }
@@ -1036,15 +1036,13 @@ function Sheet2Form() {
     var COL_INDEX = {
         COMMAND: 0,
         META: {
-            EDIT_URL: 1,
-            PUBLISHED_URL: 2,
-            SUMMARY_URL: 3,
-
+            ID: 1,
             VERSION: 1,
             TITLE: 1,
             DESCRIPTION: 1,
             MESSAGE: 1,
-            BOOLEAN: 1
+            BOOLEAN: 1,
+            URL: 1
         },
         ITEM: {
             TITLE: 1,
@@ -1154,84 +1152,124 @@ function Sheet2Form() {
         }
     };
 
-    const formMetadataHandlers = {
-        form: function (context) {
-            /*
-            var editUrl = context.row[COL_INDEX.META.EDIT_URL];
-            var publishedUrl = context.row[COL_INDEX.META.PUBLISHED_URL];
-            var summaryUrl = context.row[COL_INDEX.META.SUMMARY_URL];
-            */
-            var range = context.sheet.getRange(context.rowIndex + 1, 1, 1, 1 + COL_INDEX.META.SUMMARY_URL);
-            range.setValues([[
-                'form',
-                context.form.getEditUrl(),
-                context.form.getPublishedUrl(),
-                context.form.getSummaryUrl()
-            ]]);
-        },
+    const formMetadataRetrievers = {
         version: function (context) {
-            context.version = context.row[COL_INDEX.META.VERSION];
-            if (context.version !== '1') {
-                throw "ERROR! Invalid Version: " + context.version;
+            context.formOptions.version = context.row[COL_INDEX.META.VERSION];
+        },
+        title: function (context) {
+            context.formOptions.title = context.row[COL_INDEX.META.TITLE];
+        },
+        description: function (context) {
+            context.formOptions.description = context.row[COL_INDEX.META.DESCRIPTION];
+        },
+        isQuiz: function (context) {
+            context.formOptions.isQuiz = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        shuffleQuestions: function (context) {
+            context.formOptions.shuffleQuestions = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        acceptingResponses: function (context) {
+            context.formOptions.acceptingResponses = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        allowResponseEdits: function (context) {
+            context.formOptions.allowResponseEdits = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        collectEmail: function (context) {
+            context.formOptions.collectEmail = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        limitOneResponsePerUser: function (context) {
+            context.formOptions.limitOneResponsePerUser = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        progressBar: function (context) {
+            context.formOptions.progressBar = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        publishingSummary: function (context) {
+            context.formOptions.publishingSummary = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        requireLogin: function (context) {
+            context.formOptions.requireLogin = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        showLinkToRespondAgain: function (context) {
+            context.formOptions.showLinkToRespondAgain = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
+        },
+        confirmationMessage: function(context) {
+            context.formOptions.confirmationMessage = context.row[COL_INDEX.META.MESSAGE];
+        },
+        customClosedFormMessage: function (context) {
+            context.formOptions.customClosedFormMessage = context.row[COL_INDEX.META.MESSAGE];
+        },
+        editors: function(context){
+            context.formOptions.editors = context.row[COL_INDEX.META.MESSAGE].split(/,\s*/);
+        },
+        id: function(context){
+            context.formOptions.id = context.row[COL_INDEX.META.ID];
+            context.rowIndexKey.id = context.rowIndex;
+        },
+        editUrl: function(context){
+            context.formOptions.editUrl = context.row[COL_INDEX.META.URL];
+            context.rowIndexKey.editUrl = context.rowIndex;
+        },
+        publishedUrl: function(context){
+            context.formOptions.publishedUrl = context.row[COL_INDEX.META.URL];
+            context.rowIndexKey.publishedUrl = context.rowIndex;
+        },
+        summaryUrl: function(context){
+            context.formOptions.summaryUrl = context.row[COL_INDEX.META.URL];
+            context.rowIndexKey.summaryUrl = context.rowIndex;
+        }
+    };
+
+    const formMetadataHandlers = {
+        version: function (context) {
+            context.version = context.formOptions.version;
+            if (context.version !== '1' && context.version !== 1) {
+                // throw "ERROR! Invalid Version: " + context.version;
             }
         },
         title: function (context) {
-            context.form.setTitle(context.row[COL_INDEX.META.TITLE])
+            context.form.setTitle(context.formOptions.title)
         },
         description: function (context) {
-            context.form.setDescription(context.row[COL_INDEX.META.DESCRIPTION])
+            context.form.setDescription(context.formOptions.description)
         },
         isQuiz: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setIsQuiz(value);
+            context.form.setIsQuiz(context.formOptions.isQuiz);
         },
         shuffleQuestions: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setShuffleQuestions(value);
+            context.form.setShuffleQuestions(context.formOptions.shuffleQuestions);
         },
         acceptingResponses: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setAcceptingResponses(value);
+            context.form.setAcceptingResponses(context.formOptions.acceptingResponses);
         },
         allowResponseEdits: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setAllowResponseEdits(value);
+            context.form.setAllowResponseEdits(context.formOptions.allowResponseEdits);
         },
         collectEmail: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setCollectEmail(value);
+            context.form.setCollectEmail(context.formOptions.collectEmail);
         },
         limitOneResponsePerUser: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setLimitOneResponsePerUser(value);
+            context.form.setLimitOneResponsePerUser(context.formOptions.limitOneResponsePerUser);
         },
         progressBar: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setProgressBar(value);
+            context.form.setProgressBar(context.formOptions.progressBar);
         },
         publishingSummary: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setPublishingSummary(value);
+            context.form.setPublishingSummary(context.formOptions.publishingSummary);
         },
         requireLogin: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setRequireLogin(value);
+            context.form.setRequireLogin(context.formOptions.requireLogin);
         },
         showLinkToRespondAgain: function (context) {
-            var value = booleanValue(context.row[COL_INDEX.META.BOOLEAN]);
-            context.form.setShowLinkToRespondAgain(value);
+            context.form.setShowLinkToRespondAgain(context.formOptions.showLinkToRespondAgain);
         },
         confirmationMessage: function(context) {
-            var confirmationMessage = context.row[COL_INDEX.META.MESSAGE];
-            context.form.setConfirmationMessage(confirmationMessage);
+            context.form.setConfirmationMessage(context.formOptions.confirmationMessage);
         },
         customClosedFormMessage: function (context) {
-            var customClosedFormMessage = context.row[COL_INDEX.META.MESSAGE];
-            context.form.setCustomClosedFormMessage(customClosedFormMessage);
+            context.form.setCustomClosedFormMessage(context.formOptions.customClosedFormMessage);
         },
         editors: function(context){
-            var editors = context.row[COL_INDEX.META.MESSAGE].split(/,\s*/);
-            context.form.addEditors(editors);
+            context.form.addEditors(context.formOptions.editors);
         },
         id: function(context){
             // do nothing
@@ -1267,7 +1305,7 @@ function Sheet2Form() {
                 if (context.values[rowIndex][COL_INDEX.COMMAND] === EMPTY_STRING) {
                     itemList.push({
                         label: context.values[rowIndex][COL_INDEX.ITEM.Q.CHOICE.ITEM.LABEL],
-                        isCorrectAnswer: context.values[rowIndex][COL_INDEX.ITEM.Q.CHOICE.ITEM.IS_CORRECT_ANSWER],
+                        isCorrectAnswer: booleanValue(context.values[rowIndex][COL_INDEX.ITEM.Q.CHOICE.ITEM.IS_CORRECT_ANSWER]),
                         navigation: context.values[rowIndex][COL_INDEX.ITEM.Q.CHOICE.ITEM.NAVIGATION]
                     });
                 } else {
@@ -1342,6 +1380,26 @@ function Sheet2Form() {
         }
     };
 
+    var gridHandler = function(context){
+        var rowList = [], colList = [];
+        for (var rowIndex = context.rowIndex + 1; rowIndex < context.rows; rowIndex++) {
+            if (context.values[rowIndex][COL_INDEX.COMMAND] === EMPTY_STRING) {
+                callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.ROW_LABEL], function (value) {
+                    rowList.push(value);
+                });
+                callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.COL_LABEL], function (value) {
+                    colList.push(value);
+                });
+            } else {
+                context.rowIndex = rowIndex - 1;
+                break;
+            }
+        }
+        context.item.setRows(rowList).setColumns(colList);
+        itemModifiers.itemMetadata(context);
+        itemModifiers.questionMetadata(context);
+    };
+
     const itemHandlers = {
         radio: multipleChoiceHandler,
 
@@ -1366,45 +1424,13 @@ function Sheet2Form() {
         },
 
         checkboxGrid: function (context) {
-            var rowList = [], colList = [];
-            for (var rowIndex = context.rowIndex + 1; rowIndex < context.rows; rowIndex++) {
-                if (context.values[rowIndex][COL_INDEX.COMMAND] === EMPTY_STRING) {
-                    callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.ROW_LABEL], function (value) {
-                        rowList.push(value);
-                    });
-                    callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.COL_LABEL], function (value) {
-                        colList.push(value);
-                    });
-                } else {
-                    context.rowIndex = rowIndex - 1;
-                    break;
-                }
-            }
             context.item = context.form.addCheckboxGridItem();
-            context.item.setRows(rowList).setColumns(colList);
-            itemModifiers.itemMetadata(context);
-            itemModifiers.questionMetadata(context);
+            gridHandler(context);
         },
 
         grid: function (context) {
-            var rowList = [], colList = [];
-            for (var rowIndex = context.rowIndex + 1; rowIndex < context.rows; rowIndex++) {
-                if (context.values[rowIndex][COL_INDEX.COMMAND] === EMPTY_STRING) {
-                    callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.ROW_LABEL], function (value) {
-                        rowList.push(value);
-                    });
-                    callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.COL_LABEL], function (value) {
-                        colList.push(value);
-                    });
-                } else {
-                    context.rowIndex = rowIndex - 1;
-                    break;
-                }
-            }
             context.item = context.form.addGridItem();
-            context.item.setRows(rowList).setColumns(colList);
-            itemModifiers.itemMetadata(context);
-            itemModifiers.questionMetadata(context);
+            gridHandler(context);
         },
 
         time: function (context) {
@@ -1567,11 +1593,26 @@ function Sheet2Form() {
             Logger.log('row:' + context.rowIndex);
             context.row = context.values[context.rowIndex];
             var command = context.row[COL_INDEX.COMMAND];
-            if (command === '') {
+            if (command === '' || command === 'end') {
                 break;
-            } else if (formMetadataHandlers[command]) {
-                formMetadataHandlers[command](context);
+            } else if (command.charAt(0) === '#' || command == 'comment') {
+                continue;
+            } else if (formMetadataRetrievers[command]) {
+                formMetadataRetrievers[command](context);
             } else if (itemHandlers[command]) {
+                if (context.form === null){
+                    if (context.formOptions.id) {
+                        context.form = FormApp.openById(context.formOptions.id);
+                        Logger.log('reuse:'+context.form.getId());
+                    } else {
+                        context.form = FormApp.create(context.formOptions.title);
+                        updateCellValues(context);
+                    }
+                    setFormMetadata(context.form, context.formOptionsDefault);
+                    Object.keys(context.formOptions).forEach(function(command){
+                        formMetadataHandlers[command](context);
+                    });
+                }
                 itemHandlers[command](context);
             } else {
                 var errorMessage = 'ERROR in row #' + context.rowIndex + '\t' + context.row.join('\t');
@@ -1582,32 +1623,61 @@ function Sheet2Form() {
         return endState(context);
     }
 
+    function updateCellValues(context){
+        Object.keys(context.rowIndexKey).forEach(function(key){
+           var rowIndex = context.rowIndexKey[key];
+           if(0 <= rowIndex){
+               var value = null;
+               switch(key) {
+                   case 'id':
+                       value = context.form.getId();
+                       break;
+                   case 'editUrl':
+                       value = context.form.getEditUrl();
+                       break;
+                   case 'publishedUrl':
+                       value = context.form.getPublishedUrl();
+                       break;
+                   case 'summaryUrl':
+                       value = context.form.getSummaryUrl();
+                       break;
+               }
+               context.sheet.getRange(rowIndex + 1, 2).setValue(value);
+           }
+        });
+    }
+
     function endState(context) {
         return context.form;
     }
 
-    var convert = function (sheet, formTitle, formOptions) {
-        var form = FormApp.create(formTitle);
-        form.setAcceptingResponses(formOptions.acceptingResponses);
-        form.setAllowResponseEdits(formOptions.allowResponseEdits);
-        form.setCollectEmail(formOptions.collectEmail);
-        form.setLimitOneResponsePerUser(formOptions.limitOneResponsePerUser);
-        form.setProgressBar(formOptions.progressBar);
-        form.setPublishingSummary(formOptions.publishingSummary);
-        form.setRequireLogin(formOptions.requireLogin);
-        form.setShowLinkToRespondAgain(formOptions.showLinkToRespondAgain);
-        form.setShuffleQuestions(formOptions.shuffleQuestions);
-        form.setIsQuiz(formOptions.isQuiz);
+    function setFormMetadata(form, formOptionsDefault){
+        form.setAcceptingResponses(formOptionsDefault.acceptingResponses);
+        form.setAllowResponseEdits(formOptionsDefault.allowResponseEdits);
+        form.setCollectEmail(formOptionsDefault.collectEmail);
+        form.setLimitOneResponsePerUser(formOptionsDefault.limitOneResponsePerUser);
+        form.setProgressBar(formOptionsDefault.progressBar);
+        form.setPublishingSummary(formOptionsDefault.publishingSummary);
+        form.setRequireLogin(formOptionsDefault.requireLogin);
+        form.setShowLinkToRespondAgain(formOptionsDefault.showLinkToRespondAgain);
+        form.setShuffleQuestions(formOptionsDefault.shuffleQuestions);
+        form.setIsQuiz(formOptionsDefault.isQuiz);
         /*
-        form.setConfirmationMessage(formOptions.confirmationMessage);
-        form.setCustomClosedFormMessage(formOptions.customClosedFormMessage);
+        form.setConfirmationMessage(formOptionsDefault.confirmationMessage);
+        form.setCustomClosedFormMessage(formOptionsDefault.customClosedFormMessage);
         */
+    }
+
+    var convert = function (sheet, formTitle, formOptionsDefault) {
         var context = {
             editUrl: undefined,
             publishedUrl: undefined,
             summaryUrl: undefined,
             version: '1',
-            form: form,
+            form: null,
+            formOptionsDefault: formOptionsDefault,
+            formOptions: {title: formTitle},
+            rowIndexKey: {},
             sheet: sheet,
             cols: sheet.getLastColumn(),
             rows: sheet.getLastRow(),
@@ -1634,7 +1704,7 @@ module.exports = Sheet2Form;
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {global.createNewForm = __webpack_require__(2);
+/* WEBPACK VAR INJECTION */(function(global) {global.exportForm = __webpack_require__(2);
 global.importForm = __webpack_require__(3);
 global.onOpen = __webpack_require__(4).onOpen;
 
