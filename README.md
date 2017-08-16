@@ -12,10 +12,7 @@ Google Apps Script to convert Google Form from/to Google Spreadsheet.
  
 # Example
 
-Each row in the Google Spreadsheet is the command and params:
- * to set a preference value
- * to create a form item
- * to create a form item choice
+## Google Spreadsheet content  
  
  | | A | B | C | D | E |
  |---|---|---|---|---|---|
@@ -26,9 +23,9 @@ Each row in the Google Spreadsheet is the command and params:
  |5|customClosedFormMessage|||
  |6|description||||
  |7|shuffleQuestions|FALSE|||
- |8|title|this is test|
- |9|title| a sample form | | | 
- |10|text| name | Please input your full-name. | TRUE | |
+ |8|title| a sample form | | | 
+ |9|text| name | Please input your full-name. | TRUE | |
+ |10|paragraphText| How do you feel like? |  |  | |
  |11|multipleChoice | gender | Please select your gender.| TRUE | TRUE |
  |12| | male | | |
  |13| | female | | |
@@ -37,13 +34,17 @@ Each row in the Google Spreadsheet is the command and params:
  |16| | summer | | |
  |17| | autumn | | |
  |18| | winter | | |
- |19|paragraphText| How do you feel like? |  |  | |
   
- More detailed usage and example are available at:
+Each row in this Google Spreadsheet is the command and params:
+ * Row 1-8: to set a preference value(isQuiz, acceptingResponses, publishingSummary, confirmationMessage, customClosedMessage, description, title, )
+ * Row 9-18: to create a form item (text, paragraphText, multipleChoice, checkbox)
+ * Row 12-13, 15-18: to create choices of multiple selection item
+ 
+More detailed usage and example are available at:
   
-  * spreadsheet  
+ * spreadsheet (usage of all of the command descriptions and examples): 
     https://docs.google.com/spreadsheets/d/1W8OxCjZVDmqEz9EKAXRQjn2wvHDFibSRkQRuqnUBo60/edit?usp=sharing
-  * form
+ * form (an example translated by the spreadsheet): 
     https://docs.google.com/forms/d/14hZbP_PPKds9qsUaA6FSfQXI1ox5KSePtQWzJpCRnrI/viewform?edit_requested=true
 
  These commands and props are almost compatible to Google Apps Script Forms Service API
