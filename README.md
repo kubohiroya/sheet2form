@@ -26,7 +26,8 @@ Each row in the Google Spreadsheet is the command and params:
  |5|customClosedFormMessage|||
  |6|description||||
  |7|shuffleQuestions|FALSE|||
- |8|title|this is test| |9|title| a sample form | | | 
+ |8|title|this is test|
+ |9|title| a sample form | | | 
  |10|text| name | Please input your full-name. | TRUE | |
  |11|multipleChoice | gender | Please select your gender.| TRUE | TRUE |
  |12| | male | | |
