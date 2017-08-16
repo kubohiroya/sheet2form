@@ -10,7 +10,7 @@ Google Apps Script to convert Google Form from/to Google Spreadsheet.
   
 ### Limitations
 
-Warning: Incomplete interpretation caused by Google Forms API insufficiency.
+Warning: Incomplete conversion caused by Google Forms API insufficiency.
 
  * see https://github.com/kubohiroya/sheet2form/issues
  
@@ -39,7 +39,7 @@ Warning: Incomplete interpretation caused by Google Forms API insufficiency.
  |17| | autumn | | |
  |18| | winter | | |
   
-Each row in this Google Spreadsheet is for creating form item:
+Each row in this example stands for a command and a set of properties to create a form item:
  * Row 1-7: to set a form configuration(`title`, `description`, `id`, `isQuiz`, `shuffleQuestions`, `acceptingResponses`, `publishingSummary` )
  * Row 8-18: to create a form item (`sectionHeader`, `text`, `paragraphText`, `multipleChoice`, `checkbox`)
  * Row 12-13, 15-18: to create choices of multiple selection item
@@ -80,7 +80,7 @@ More detailed usage and example are available at:
 ## Usage 
 ### `exportForm` 
  * Create your own form definition in your Google Spreadsheet in the format as described above.
- * Execute the functions `exportForm` from customized menu in the spreadsheet UI.
+ * Execute the function `exportForm` from customized menu in the spreadsheet UI.
  * The `id` row with empty value will be set with the newly generated form id in process of converting from spreadsheet to form. In the similar way, the values of `editUrl` row, `publishedUrl` row or `summaryUrl` rows will be set.
  * If an `id` row with actual(not-empty) value exists and its related form can be opened by the Google Forms API method `FormApp.openById`, the related form will be reused as the exporting target.
  
