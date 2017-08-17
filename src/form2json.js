@@ -3,80 +3,11 @@
 
 function Form2Json() {
 
-    function choicesToJson(choice) {
-        return Object_assign(Object_assign({
-            value: choice.getValue()
-        }, (choice.isCorrectAnswer())? {
-            isCorrectAnswer: choice.isCorrectAnswer()
-        } : {}),
-            (choice.getPageNavigationType() !== null)? {
-            pageNavigationType: pageNavigationTypeToString(choice.getPageNavigationType())
-        } : {});
-    }
-
-    function userToJson(user) {
-        return {
-            email: user.getEmail()
-        };
-    }
-
-    function blobToJson(blob) {
-        return {
-            name: blob.getName(),
-            contentType: blob.getContentType(),
-            dataAsString: blob.getDataAsString()
-        };
-    }
-
-    function feedbackToJson(feedback) {
-        if (feedback) {
-            return {
-                linkUrls: feedback.getLinkUrls(),
-                text: feedback.getText()
-            };
-        } else {
-            return null;
-        }
-    }
-
-    function alignmentToString(alignment) {
-        switch (alignment) {
-            case FormApp.Alignment.LEFT:
-                return 'LEFT';
-            case FormApp.Alignment.RIGHT:
-                return 'RIGHT';
-            case FormApp.Alignment.CENTER:
-                return 'CENTER';
-            default:
-                return 'INVALID_ALIGNMENT';
-        }
-    }
-
-    function pageNavigationTypeToString(type) {
-        switch (type) {
-            case FormApp.PageNavigationType.CONTINUE:
-                return 'CONTINUE';
-            case FormApp.PageNavigationType.GO_TO_PAGE:
-                return 'GO_TO_PAGE';
-            case FormApp.PageNavigationType.RESTART:
-                return 'RESTART';
-            case FormApp.PageNavigationType.SUBMIT:
-                return 'SUBMIT';
-            default:
-                return 'INVALID_NAVIGATION';
-        }
-    }
-
-    function pageBreakToString(pageBreak) {
-        if (pageBreak) {
-            return {
-                index: pageBreak.getIndex()
-            };
-        } else {
-            return null;
-        }
-    }
-
+    /**
+     * Convert a Google Form object into JSON Object.
+     * @returns JSON object of form data
+     * @param form {Form} a Google Form Object
+     * */
     function convert(form) {
         var metadata = {
             isQuiz: form.isQuiz(),
@@ -159,6 +90,80 @@ function Form2Json() {
         TEXT: 'text',
         TIME: 'time'
     };
+
+    function choicesToJson(choice) {
+        return Object_assign(Object_assign({
+                value: choice.getValue()
+            }, (choice.isCorrectAnswer())? {
+                isCorrectAnswer: choice.isCorrectAnswer()
+            } : {}),
+            (choice.getPageNavigationType() !== null)? {
+                pageNavigationType: pageNavigationTypeToString(choice.getPageNavigationType())
+            } : {});
+    }
+
+    function userToJson(user) {
+        return {
+            email: user.getEmail()
+        };
+    }
+
+    function blobToJson(blob) {
+        return {
+            name: blob.getName(),
+            contentType: blob.getContentType(),
+            dataAsString: blob.getDataAsString()
+        };
+    }
+
+    function feedbackToJson(feedback) {
+        if (feedback) {
+            return {
+                linkUrls: feedback.getLinkUrls(),
+                text: feedback.getText()
+            };
+        } else {
+            return null;
+        }
+    }
+
+    function alignmentToString(alignment) {
+        switch (alignment) {
+            case FormApp.Alignment.LEFT:
+                return 'LEFT';
+            case FormApp.Alignment.RIGHT:
+                return 'RIGHT';
+            case FormApp.Alignment.CENTER:
+                return 'CENTER';
+            default:
+                return 'INVALID_ALIGNMENT';
+        }
+    }
+
+    function pageNavigationTypeToString(type) {
+        switch (type) {
+            case FormApp.PageNavigationType.CONTINUE:
+                return 'CONTINUE';
+            case FormApp.PageNavigationType.GO_TO_PAGE:
+                return 'GO_TO_PAGE';
+            case FormApp.PageNavigationType.RESTART:
+                return 'RESTART';
+            case FormApp.PageNavigationType.SUBMIT:
+                return 'SUBMIT';
+            default:
+                return 'INVALID_NAVIGATION';
+        }
+    }
+
+    function pageBreakToString(pageBreak) {
+        if (pageBreak) {
+            return {
+                index: pageBreak.getIndex()
+            };
+        } else {
+            return null;
+        }
+    }
 
     function getItemTypeName(item) {
         switch (item.getType()) {

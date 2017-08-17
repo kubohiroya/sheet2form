@@ -3,6 +3,35 @@
 
 function Sheet2Form() {
 
+    /**
+     * Create a Google Form by a sheet of Google Spreadsheet containing values representing Google Form contents.
+     * @param sheet {Object} sheet of Google Spreadsheet containing values representing Google Form contents
+     * @param [formTitle] {string} form title (optional)
+     * * @param [formOptionsDefault] {Object} default values of form metadata(optional)
+     * */
+    function convert(sheet, formTitle, formOptionsDefault) {
+        var context = {
+            editUrl: undefined,
+            publishedUrl: undefined,
+            summaryUrl: undefined,
+            version: '1',
+            form: null,
+            formOptionsDefault: formOptionsDefault,
+            formOptions: {title: formTitle},
+            rowIndexKey: {},
+            sheet: sheet,
+            lastColumn: sheet.getLastColumn(),
+            lastRow: sheet.getLastRow(),
+            values: sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn()).getValues(),
+            rowIndex: 0,
+            row: undefined,
+            pageBreakItems: {},
+            feedbackForCorrect: {},
+            feedbackForIncorrect: {}
+        };
+        return startState(context);
+    };
+
     const COL_INDEX = {
         COMMAND: 0,
         META: {
@@ -271,13 +300,16 @@ function Sheet2Form() {
         },
         choices: function (context) {
             var itemList = [];
-            for (var rowIndex = context.rowIndex + 1; rowIndex < context.rows; rowIndex++) {
-                if (context.values[rowIndex][COL_INDEX.COMMAND] === EMPTY_STRING) {
+            for (var rowIndex = context.rowIndex + 1; rowIndex < context.lastRow; rowIndex++) {
+                var command = context.values[rowIndex][COL_INDEX.COMMAND];
+                if (command === EMPTY_STRING) {
                     itemList.push({
                         label: context.values[rowIndex][COL_INDEX.ITEM.Q.CHOICE.ITEM.LABEL],
                         isCorrectAnswer: booleanValue(context.values[rowIndex][COL_INDEX.ITEM.Q.CHOICE.ITEM.IS_CORRECT_ANSWER]),
                         navigation: context.values[rowIndex][COL_INDEX.ITEM.Q.CHOICE.ITEM.NAVIGATION]
                     });
+                } if (command.charAt(0) === '#'){
+                    continue;
                 } else {
                     context.rowIndex = rowIndex - 1;
                     break;
@@ -331,14 +363,6 @@ function Sheet2Form() {
         }
     };
 
-    const itemPreprocessor = {
-        pageBreak: function (context) {
-            context.item = context.form.addPageBreakItem();
-            itemModifiers.itemMetadata(context);
-            context.pageBreakItems[context.item.getTitle()] = context.item;
-        }
-    };
-
     function multipleChoiceHandler (context) {
         context.item = context.form.addMultipleChoiceItem();
         itemModifiers.choices(context);
@@ -352,14 +376,17 @@ function Sheet2Form() {
 
     function gridHandler (context){
         var rowList = [], colList = [];
-        for (var rowIndex = context.rowIndex + 1; rowIndex < context.rows; rowIndex++) {
-            if (context.values[rowIndex][COL_INDEX.COMMAND] === EMPTY_STRING) {
+        for (var rowIndex = context.rowIndex + 1; rowIndex < context.lastRow; rowIndex++) {
+            var command = context.values[rowIndex][COL_INDEX.COMMAND];
+            if (command === EMPTY_STRING) {
                 callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.ROW_LABEL], function (value) {
                     rowList.push(value);
                 });
                 callWithNotNullValue(context.values[rowIndex][COL_INDEX.ITEM.Q.GRID.ITEM.COL_LABEL], function (value) {
                     colList.push(value);
                 });
+            } if (command.charAt(0) === '#'){
+                continue;
             } else {
                 context.rowIndex = rowIndex - 1;
                 break;
@@ -506,7 +533,7 @@ function Sheet2Form() {
 
         feedback: function (context) {
             var feedback = FormApp.createFeedback();
-            for (var rowIndex = context.rowIndex; rowIndex < context.rows; rowIndex++) {
+            for (var rowIndex = context.rowIndex; rowIndex < context.lastRow; rowIndex++) {
                 var command = context.values[rowIndex][COL_INDEX.COMMAND];
                 var feedbackDisplayTextOrUrl = context.values[rowIndex][COL_INDEX.FEEDBACK.TEXT_OR_URL];
                 var feedbackDisplayText = context.values[rowIndex][COL_INDEX.FEEDBACK.DISPLAY_TEXT];
@@ -544,22 +571,27 @@ function Sheet2Form() {
     }
 
     function startState(context) {
-        return addingPageBreakItemsState(context);
-    }
-
-    function addingPageBreakItemsState(context) {
-        for (context.rowIndex = 0; context.rowIndex < context.rows; context.rowIndex++) {
-            context.row = context.values[context.rowIndex];
-            var command = context.row[COL_INDEX.COMMAND];
-            if (command === 'pageBreak') {
-                itemPreprocessor.pageBreak(context);
-            }
-        }
         return mainLoopState(context);
     }
 
+    function setupPageBreakItems(context) {
+        var _row = context.row;
+        var _item = context.item;
+
+        for (var rowIndex = 0; rowIndex < context.lastRow; rowIndex++) {
+            context.row = context.values[rowIndex];
+            if (context.row[COL_INDEX.COMMAND] === 'pageBreak') {
+                context.item = context.form.addPageBreakItem();
+                itemModifiers.itemMetadata(context);
+                context.pageBreakItems[context.item.getTitle()] = context.item;
+            }
+        }
+        context.row = _row;
+        context.item = _item;
+    }
+
     function mainLoopState(context) {
-        for (context.rowIndex = 0; context.rowIndex < context.rows; context.rowIndex++) {
+        for (context.rowIndex = 0; context.rowIndex < context.lastRow; context.rowIndex++) {
             Logger.log('row:' + context.rowIndex);
             context.row = context.values[context.rowIndex];
             var command = context.row[COL_INDEX.COMMAND];
@@ -586,6 +618,7 @@ function Sheet2Form() {
                     Object.keys(context.formOptions).forEach(function(command){
                         formMetadataHandlers[command](context);
                     });
+                    setupPageBreakItems(context);
                 }
                 itemHandlers[command](context);
             } else {
@@ -626,49 +659,26 @@ function Sheet2Form() {
     }
 
     function setFormMetadata(form, formOptionsDefault){
-        form.setAcceptingResponses(formOptionsDefault.acceptingResponses);
-        form.setAllowResponseEdits(formOptionsDefault.allowResponseEdits);
-        form.setCollectEmail(formOptionsDefault.collectEmail);
-        form.setLimitOneResponsePerUser(formOptionsDefault.limitOneResponsePerUser);
-        form.setProgressBar(formOptionsDefault.progressBar);
-        form.setPublishingSummary(formOptionsDefault.publishingSummary);
-        form.setRequireLogin(formOptionsDefault.requireLogin);
-        form.setShowLinkToRespondAgain(formOptionsDefault.showLinkToRespondAgain);
-        form.setShuffleQuestions(formOptionsDefault.shuffleQuestions);
-        form.setIsQuiz(formOptionsDefault.isQuiz);
-        /*
-        form.setConfirmationMessage(formOptionsDefault.confirmationMessage);
-        form.setCustomClosedFormMessage(formOptionsDefault.customClosedFormMessage);
-        */
+        if(formOptionsDefault){
+            form.setAcceptingResponses(formOptionsDefault.acceptingResponses);
+            form.setAllowResponseEdits(formOptionsDefault.allowResponseEdits);
+            form.setCollectEmail(formOptionsDefault.collectEmail);
+            form.setLimitOneResponsePerUser(formOptionsDefault.limitOneResponsePerUser);
+            form.setProgressBar(formOptionsDefault.progressBar);
+            form.setPublishingSummary(formOptionsDefault.publishingSummary);
+            form.setRequireLogin(formOptionsDefault.requireLogin);
+            form.setShowLinkToRespondAgain(formOptionsDefault.showLinkToRespondAgain);
+            form.setShuffleQuestions(formOptionsDefault.shuffleQuestions);
+            form.setIsQuiz(formOptionsDefault.isQuiz);
+            /*
+            form.setConfirmationMessage(formOptionsDefault.confirmationMessage);
+            form.setCustomClosedFormMessage(formOptionsDefault.customClosedFormMessage);
+            */
+        }
     }
 
-    function convert(sheet, formTitle, formOptionsDefault) {
-        var context = {
-            editUrl: undefined,
-            publishedUrl: undefined,
-            summaryUrl: undefined,
-            version: '1',
-            form: null,
-            formOptionsDefault: formOptionsDefault,
-            formOptions: {title: formTitle},
-            rowIndexKey: {},
-            sheet: sheet,
-            cols: sheet.getLastColumn(),
-            rows: sheet.getLastRow(),
-            values: sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn()).getValues(),
-            rowIndex: 0,
-            row: undefined,
-            pageBreakItems: {},
-            feedbackForCorrect: {},
-            feedbackForIncorrect: {}
-        };
-        return startState(context);
-    };
-
     return {
-        convert: convert,
-        headerCommands: formMetadataHandlers,
-        itemCommands: itemHandlers
+        convert: convert
     };
 }
 

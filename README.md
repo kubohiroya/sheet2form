@@ -65,7 +65,10 @@ More detailed usage and example are available at:
 * Open the ScriptEditor from the spreadsheet to create a Container Bounded Script Project.
 * Add a new Google Apps Script file in the project by copying `./src/sheet2form.gs` file content in this repository.
 
-#### 2. Setup onOpen event trigger 
+#### 2. Enable API
+* Enable `Google Drive API`, `Google Sheets API` by `Advanced Google Services` and `Google API Console` from `Resource` menu in the ScriptEditor.
+ 
+#### 3. Setup onOpen event trigger 
 * Setup a trigger to execute function `onOpen` with spreadsheet `onOpen` event.
 * Re-open the Google Spreadsheet. 
 
@@ -77,19 +80,22 @@ More detailed usage and example are available at:
 * Open the ScriptEditor from the spreadsheet to create a Container Bounded Script Project.
 * Add a new Google Apps Script file in the project by copying `./bridge.gs` file content in this repository.
 
-#### 2. Create a Standalone Script hosted on GitHub
+#### 2. Enable API
+* Enable `Google Drive API`, `Google Sheets API` by `Advanced Google Services` and `Google API Console` from `Resource` menu in the ScriptEditor.
+ 
+#### 3. Create a Standalone Script hosted on GitHub
 
 * Create an empty Google Apps Script on your GoogleDrive as a Standalone Script Project Project.
 * Setup `node-google-apps-script` so as to create your credential file and `./gapps.config.json` file.
   cf. https://www.npmjs.com/package/node-google-apps-script
 * Build and Dist the library with `npm run build && npm run dist` 
 
-#### 3. Bind the spreadsheet to the Standalone Script Project
+#### 4. Bind the spreadsheet to the Standalone Script Project
 * In the Standalone Script Project, COPY the value of 'Project Key' project property.
 * In the Container Bounded Script Project, click `Resource` -> `Library` menu to open `Adding Library`, 
  PASTE the copy of 'Project Key', so as to setup your Standalone Script Project as the library referenced by `sheet2form` variable.
  
-#### 4. Setup onOpen event trigger 
+#### 5. Setup onOpen event trigger 
 * Setup a trigger to execute function `onOpen` with spreadsheet `onOpen` event.
 * Re-open the Google Spreadsheet. 
 
