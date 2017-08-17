@@ -3,7 +3,7 @@
 
 function Sheet2Form() {
 
-    var COL_INDEX = {
+    const COL_INDEX = {
         COMMAND: 0,
         META: {
             ID: 1,
@@ -73,22 +73,22 @@ function Sheet2Form() {
         }
     };
 
-    var EMPTY_STRING = '';
+    const EMPTY_STRING = '';
 
-    var ALIGNMENT = {
+    const ALIGNMENT = {
         'LEFT': FormApp.Alignment.LEFT,
         'CENTER': FormApp.Alignment.CENTER,
         'RIGHT': FormApp.Alignment.RIGHT
     };
 
-    var PAGE_NAVIGATION_TYPE = {
+    const PAGE_NAVIGATION_TYPE = {
         'CONTINUE': FormApp.PageNavigationType.CONTINUE,
         'GO_TO_PAGE': FormApp.PageNavigationType.GO_TO_PAGE,
         'RESTART': FormApp.PageNavigationType.RESTART,
         'SUBMIT': FormApp.PageNavigationType.SUBMIT
     };
 
-    var booleanValue = function (value) {
+    function booleanValue(value) {
         if (typeof value === 'boolean') {
             return value;
         } else if (typeof value === 'string') {
@@ -99,24 +99,24 @@ function Sheet2Form() {
         return false;
     };
 
-    var callWithBooleanValue = function (value, callback) {
+    function callWithBooleanValue(value, callback) {
         var b = booleanValue(value);
         if (b) {
             callback(b);
         }
     };
-    var callWithIntegerValue = function (value, callback) {
+    function callWithIntegerValue(value, callback) {
         var intValue = parseInt(value, 10);
         if (!isNaN(intValue)) {
             callback(intValue);
         }
     };
 
-    var isNotNullValue = function (value) {
+    function isNotNullValue(value) {
         return (value !== undefined && value !== null && value !== EMPTY_STRING);
     };
 
-    var callWithNotNullValue = function (value, callback) {
+    function callWithNotNullValue(value, callback) {
         if (isNotNullValue(value)) {
             callback(value);
         }
@@ -339,7 +339,7 @@ function Sheet2Form() {
         }
     };
 
-    var multipleChoiceHandler = function (context) {
+    function multipleChoiceHandler (context) {
         context.item = context.form.addMultipleChoiceItem();
         itemModifiers.choices(context);
         itemModifiers.itemMetadata(context);
@@ -350,7 +350,7 @@ function Sheet2Form() {
         }
     };
 
-    var gridHandler = function(context){
+    function gridHandler (context){
         var rowList = [], colList = [];
         for (var rowIndex = context.rowIndex + 1; rowIndex < context.rows; rowIndex++) {
             if (context.values[rowIndex][COL_INDEX.COMMAND] === EMPTY_STRING) {
@@ -565,7 +565,7 @@ function Sheet2Form() {
             var command = context.row[COL_INDEX.COMMAND];
             if (command === '' || command === 'end') {
                 break;
-            } else if (command.charAt(0) === '#' || command == 'comment') {
+            } else if (command.charAt(0) === '#' || command === 'comment') {
                 continue;
             } else if (formMetadataRetrievers[command]) {
                 formMetadataRetrievers[command](context);
@@ -642,7 +642,7 @@ function Sheet2Form() {
         */
     }
 
-    var convert = function (sheet, formTitle, formOptionsDefault) {
+    function convert(sheet, formTitle, formOptionsDefault) {
         var context = {
             editUrl: undefined,
             publishedUrl: undefined,

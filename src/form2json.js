@@ -106,7 +106,7 @@ function Form2Json() {
         };
     }
 
-    var types = {
+    const types = {
         CHECKBOX: FormApp.ItemType.CHECKBOX,
         CHECKBOX_GRID: FormApp.ItemType.CHECKBOX_GRID,
         DATE: FormApp.ItemType.DATE,
@@ -124,7 +124,7 @@ function Form2Json() {
         TIME: FormApp.ItemType.TIME
     };
 
-    var TYPE_NAMES_UPPER = {
+    const TYPE_NAMES_UPPER = {
         CHECKBOX: 'CHECKBOX',
         CHECKBOX_GRID: 'CHECKBOX_GRID',
         DATE: 'DATE',
@@ -142,7 +142,7 @@ function Form2Json() {
         TIME: 'TIME'
     };
 
-    var TYPE_NAMES = {
+    const TYPE_NAMES = {
         CHECKBOX: 'checkbox',
         CHECKBOX_GRID: 'checkboxGrid',
         DATE: 'date',
