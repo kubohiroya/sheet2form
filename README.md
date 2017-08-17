@@ -63,7 +63,7 @@ More detailed usage and example are available at:
 #### 1. Create an empty spreadsheet and its Container Bounded Script
 * Create an empty Google Spreadsheet file on your GoogleDrive.
 * Open the ScriptEditor from the spreadsheet to create a Container Bounded Script Project.
-* Add a new Google Apps Script file in the project by copying `./bridge.gs` and `./src/sheet2form.gs` file content in this repository.
+* Add a new Google Apps Script file in the project by copying `./src/sheet2form.gs` file content in this repository.
 
 #### 2. Setup onOpen event trigger 
 * Setup a trigger to execute function `onOpen` with spreadsheet `onOpen` event.
