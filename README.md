@@ -58,12 +58,12 @@ More detailed usage and example are available at:
 
 ## Installation
 
-### Installation Strategy A: Copy and paste .gs files simply 
+### Installation Strategy A: Copy and paste ./dist/sheet2form.gs file simply 
 
 #### 1. Create an empty spreadsheet and its Container Bounded Script
 * Create an empty Google Spreadsheet file on your GoogleDrive.
 * Open the ScriptEditor from the spreadsheet to create a Container Bounded Script Project.
-* Add a new Google Apps Script file in the project by copying `./src/sheet2form.gs` file content in this repository.
+* Add a new Google Apps Script file in the project by copying `./dist/sheet2form.gs` file content in this repository.
 
 #### 2. Enable API
 * Enable `Google Drive API`, `Google Sheets API` by `Advanced Google Services` and `Google API Console` from `Resource` menu in the ScriptEditor.
