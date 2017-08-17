@@ -65,12 +65,9 @@ More detailed usage and example are available at:
 * Open the ScriptEditor from the spreadsheet to create a Container Bounded Script Project.
 * Add a new Google Apps Script file in the project by copying `./dist/sheet2form.gs` file content in this repository.
 
-#### 2. Enable API
-* Enable `Google Drive API`, `Google Sheets API` by `Advanced Google Services` and `Google API Console` from `Resource` menu in the ScriptEditor.
- 
-#### 3. Setup onOpen event trigger 
+#### 2. Setup onOpen event trigger 
 * Setup a trigger to execute function `onOpen` with spreadsheet `onOpen` event.
-* Re-open the Google Spreadsheet. 
+* Execute function `onOpen`.
 
 ### Installation Strategy B: Setup and bind a reusable standalone script 
 
@@ -97,7 +94,7 @@ More detailed usage and example are available at:
  
 #### 5. Setup onOpen event trigger 
 * Setup a trigger to execute function `onOpen` with spreadsheet `onOpen` event.
-* Re-open the Google Spreadsheet. 
+* Execute function `onOpen`.
 
 ## Usage 
 ### `exportForm` 
