@@ -3,25 +3,19 @@
 Google Apps Script to convert Google Form from/to Google Spreadsheet.
 
 * exportForm: 
-   Create/update your Google Form items and preferences by converting Google Spreadsheet content values in a certain format.
+   create/update your Google Form items and preferences by converting Google Spreadsheet content values in a certain format.
    
 * importForm:
-   Update your Google Spreadsheet content values in a certain format by converting Google Form items and form preferences.
+   update your Google Spreadsheet content values in a certain format by converting Google Form items and form preferences.
   
-### Limitations
-
-Warning: Some incomplete conversions may be caused by Google Forms API insufficiency.
-
- * see https://github.com/kubohiroya/sheet2form/issues
- 
 ## Example
 
-#### A short example of Google Spreadsheet content as a source of Google Form
+A short example of Google Spreadsheet content as a source of Google Form:
  
  | | A | B | C | D | E |
  |---|---|---|---|---|---|
  |1|title| a sample form | | | 
- |2|description||||
+ |2|description|This is a sample form.|||
  |3|id||||
  |4|isQuiz|FALSE|||
  |5|shuffleQuestions|FALSE|||
@@ -40,31 +34,66 @@ Warning: Some incomplete conversions may be caused by Google Forms API insuffici
  |18| | winter | | |
   
 Each row in this example stands for a command and a set of properties to create a form item:
- * Row 1-7: to set a form configuration(`title`, `description`, `id`, `isQuiz`, `shuffleQuestions`, `acceptingResponses`, `publishingSummary` )
- * Row 8-18: to create a form item (`sectionHeader`, `text`, `paragraphText`, `multipleChoice`, `checkbox`)
- * Row 12-13, 15-18: to create choices of multiple selection item
+ * Row 1-7: to set form preferences.
+ * Row 8-18: to create form items.
+ * Row 12-13, 15-18: to create choices of multiple selection items.
   
-More detailed usage and example are available at:
+### Create new form or update pre-exist form
+ 
+#### Create new form by `id` row with *empty value*
+ The `id` row with empty value, a new Google Form will be created and the `id` row will be set with the newly created form id in process of conversion from a Google Spreadsheet to a Google Form.
+ 
+   * In the similar way, the values of `editUrl` row, `publishedUrl` row or `summaryUrl` rows will be set.
+
+#### Update pre-exist form by `id` row with *actual value*
+ If an `id` row with actual(not-empty) value exists and its related Google Form can be opened by the Google Forms API method `FormApp.openById`, the opened form will be reused and updated.
+
+
+#### Add pageBreak and goToPage navigation by multipleChoice
+
+* choice with NAVIGATION
+* pageBreak with GO_TO_PAGE label
+
+(FIXME: to be written)
+
+#### setup as Quiz form 
+
+* Form#setIsQuiz
+* Item#setPoint, Item#setFeedbackForCorrect, Item#setFeedbackForIncorrect
+* Choice#isCorrectAnswer
+
+(FIXME: to be written)
+
+#### Add Feedback by reference
+
+* feedback label with prefix \# 
+* feedback reference with prefix \# 
+
+(FIXME: to be written)
+
+## Detailed usage and example
+ are available at:
   
- * Spreadsheet (usage of all of the command descriptions and examples): 
+ * Usage & Example Spreadsheet (usage of all of the command descriptions and examples): 
     https://docs.google.com/spreadsheets/d/1W8OxCjZVDmqEz9EKAXRQjn2wvHDFibSRkQRuqnUBo60/edit?usp=sharing
- * Form (an example translated by the spreadsheet): 
+ * Example Form (an example translated by the spreadsheet): 
     https://docs.google.com/forms/d/14hZbP_PPKds9qsUaA6FSfQXI1ox5KSePtQWzJpCRnrI/viewform?edit_requested=true
 
  These commands and props are almost compatible to Google Apps Script Forms Service API
 : https://developers.google.com/apps-script/reference/forms/
 
-#### The 2 ways of sheet2form execution: to create or to update
- 
- * The `id` row with empty value, a new Google Form will be created and the `id` row will be set with the newly created form id in process of conversion from a Google Spreadsheet to a Google Form.
- 
-   * In the similar way, the values of `editUrl` row, `publishedUrl` row or `summaryUrl` rows will be set.
+### Limitations
 
- * If an `id` row with actual(not-empty) value exists and its related Google Form can be opened by the Google Forms API method `FormApp.openById`, the opened form will be reused and updated.
+Warning: some incomplete conversions may be caused by Google Forms API insufficiency.
+
+ * see https://github.com/kubohiroya/sheet2form/issues
  
+
 ## Installation
 
-### Installation Strategy A: Copy and paste ./dist/sheet2form.gs file simply 
+There are 2 installation strategies. Strategy A is rather simple and easy to start. 
+
+### Installation Strategy A: Copy and paste ./dist/sheet2form.gs file
 
 #### 1. Create an empty spreadsheet and its Container Bounded Script
 1. Create an empty Google Spreadsheet file on your GoogleDrive.
