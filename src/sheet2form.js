@@ -523,7 +523,7 @@ function Sheet2Form() {
 
         pageBreak: function (context) {
             var title = context.row[COL_INDEX.ITEM.TITLE];
-            var pageNavigationType = context.row[COL_INDEX.ITEM.PAGE_BREAK.PAGE_NAVIGATION_TYPE;
+            var pageNavigationType = context.row[COL_INDEX.ITEM.PAGE_BREAK.PAGE_NAVIGATION_TYPE];
             if(pageNavigationType === EMPTY_STRING){
                 pageNavigationType = PAGE_NAVIGATION_TYPE.CONTINUE;
             }

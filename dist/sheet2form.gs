@@ -96,7 +96,7 @@ function getMessages(category, _locale) {
 function getMessages_en(category) {
     return {
         ui: {
-            'Form I/O': 'Form I/O',
+            'sheet2form': 'sheet2form',
             'export form': 'export form',
             'initialize sheet': 'initialize sheet',
             'validate sheet': 'validate sheet',
@@ -125,7 +125,7 @@ function getMessages_en(category) {
 function getMessages_ja(category) {
     return {
         ui: {
-            'Form I/O': 'Form I/O',
+            'sheet2form': 'sheet2form',
             'export form': 'フォームの書き出し',
             'initialize sheet': 'シートの初期化・読み込み',
             'validate sheet': 'シートの構造を検証する',
@@ -452,7 +452,7 @@ function onOpen(event) {
 
     var messages = getMessages('ui');
 
-    ui.createMenu(messages['Form I/O'])
+    ui.createMenu(messages['sheet2form'])
         .addItem(messages['export form'], 'exportForm')
         .addItem(messages['export form']+'...', 'exportFormWithDialog')
         .addItem(messages['import form'], 'importForm')
@@ -1186,7 +1186,7 @@ function Sheet2Form() {
             PAGE_BREAK: {
                 NA: 3,
                 PAGE_NAVIGATION_TYPE: 4,
-                GO_TO_PAGE_TITLE: 4
+                GO_TO_PAGE_TITLE: 5
             }
         },
         FEEDBACK: {
@@ -1410,10 +1410,10 @@ function Sheet2Form() {
                 }
             }
             var choices = itemList.map(function (item) {
-                var pageNavigationValue = item.navigation;
-                var pageNavigation = PAGE_NAVIGATION_TYPE[pageNavigationValue] || context.pageBreakItems[pageNavigationValue];
-                if (pageNavigation) {
-                    return context.item.createChoice(item.label, pageNavigation);
+                var goToPageTitle = item.navigation;
+                var goToPageBreakItem = context.pageBreakItems[goToPageTitle];
+                if (goToPageBreakItem) {
+                    return context.item.createChoice(item.label, goToPageBreakItem);
                 } else if (item.isCorrectAnswer) {
                     return context.item.createChoice(item.label, item.isCorrectAnswer);
                 } else {
@@ -1617,15 +1617,21 @@ function Sheet2Form() {
 
         pageBreak: function (context) {
             var title = context.row[COL_INDEX.ITEM.TITLE];
-            var goToPageTitle = context.row[COL_INDEX.ITEM.PAGE_BREAK.GO_TO_PAGE_TITLE];
-            if(goToPageTitle === EMPTY){
-                goToPageTitle = 'CONTINUE';
+            var pageNavigationType = context.row[COL_INDEX.ITEM.PAGE_BREAK.PAGE_NAVIGATION_TYPE];
+            if(pageNavigationType === EMPTY_STRING){
+                pageNavigationType = PAGE_NAVIGATION_TYPE.CONTINUE;
             }
             var pageBreakItem = context.pageBreakItems[title];
-            var goToPageBreakItem = PAGE_NAVIGATION_TYPE[goToPageTitle] || context.pageBreakItems[goToPageTitle];
             var lastItemIndex = context.form.getItems().length - 1;
             context.form.moveItem(pageBreakItem.getIndex(), lastItemIndex);
-            pageBreakItem.setGoToPage(goToPageBreakItem);
+
+            if(pageNavigationType === PAGE_NAVIGATION_TYPE.GO_TO_PAGE){
+                var goToPageTitle = context.row[COL_INDEX.ITEM.PAGE_BREAK.GO_TO_PAGE_TITLE];
+                var goToPageBreakItem = context.pageBreakItems[goToPageTitle];
+                if(goToPageBreakItem) {
+                    pageBreakItem.setGoToPage(goToPageBreakItem);
+                }
+            }
         },
 
         feedback: function (context) {
@@ -1763,10 +1769,12 @@ function Sheet2Form() {
             form.setLimitOneResponsePerUser(formOptionsDefault.limitOneResponsePerUser);
             form.setProgressBar(formOptionsDefault.progressBar);
             form.setPublishingSummary(formOptionsDefault.publishingSummary);
-            form.setRequireLogin(formOptionsDefault.requireLogin);
             form.setShowLinkToRespondAgain(formOptionsDefault.showLinkToRespondAgain);
             form.setShuffleQuestions(formOptionsDefault.shuffleQuestions);
             form.setIsQuiz(formOptionsDefault.isQuiz);
+            try {
+                form.setRequireLogin(formOptionsDefault.requireLogin);
+            }catch(ignore){}
             /*
             form.setConfirmationMessage(formOptionsDefault.confirmationMessage);
             form.setCustomClosedFormMessage(formOptionsDefault.customClosedFormMessage);
