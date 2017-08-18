@@ -6,7 +6,7 @@ function onOpen(event) {
 
     var messages = getMessages('ui');
 
-    ui.createMenu(messages['Form I/O'])
+    ui.createMenu(messages['sheet2form'])
         .addItem(messages['export form'], 'exportForm')
         .addItem(messages['export form']+'...', 'exportFormWithDialog')
         .addItem(messages['import form'], 'importForm')

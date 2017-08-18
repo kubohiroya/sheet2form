@@ -14,7 +14,7 @@ function getMessages(category, _locale) {
 function getMessages_en(category) {
     return {
         ui: {
-            'Form I/O': 'Form I/O',
+            'sheet2form': 'sheet2form',
             'export form': 'export form',
             'initialize sheet': 'initialize sheet',
             'validate sheet': 'validate sheet',
@@ -43,7 +43,7 @@ function getMessages_en(category) {
 function getMessages_ja(category) {
     return {
         ui: {
-            'Form I/O': 'Form I/O',
+            'sheet2form': 'sheet2form',
             'export form': 'フォームの書き出し',
             'initialize sheet': 'シートの初期化・読み込み',
             'validate sheet': 'シートの構造を検証する',
