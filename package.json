@@ -1,31 +1,31 @@
 {
-    "dependencies": {
-    },
-    "name": "sheet2form",
-    "description": "Google Apps Script to translate Google Form from/to Google Spreadsheet",
-    "version": "0.1.10",
-    "main": "src/index.js",
-    "devDependencies": {
-	"gas-webpack-plugin": "^0.2.1",
-	"node-google-apps-script": "^1.1.5"
-    },
-    "scripts": {
-	"build": "node_modules/.bin/webpack",
-	"dist": "node_modules/.bin/gapps upload"
-    },
-    "repository": {
-	"type": "git",
-	"url": "git+https://github.com/kubohiroya/sheet2form.git"
-    },
-    "keywords": [
-	"Google Form",
-	"Google Spreadsheet",
-	"Google Apps Script"
-    ],
-    "author": "hiroya@cuc.ac.jp",
-    "license": "MIT",
-    "bugs": {
-	"url": "https://github.com/kubohiroya/sheet2form/issues"
-    },
-    "homepage": "https://github.com/kubohiroya/sheet2form#readme"
+  "dependencies": {
+  },
+  "name": "sheet2form",
+  "description": "Google Apps Script to translate Google Form from/to Google Spreadsheet",
+  "version": "0.1.11",
+  "main": "src/index.js",
+  "devDependencies": {
+    "gas-webpack-plugin": "^0.2.1",
+    "node-google-apps-script": "^1.1.5"
+  },
+  "scripts": {
+    "build": "node_modules/.bin/webpack",
+    "dist": "node_modules/.bin/gapps upload"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kubohiroya/sheet2form.git"
+  },
+  "keywords": [
+    "Google Form",
+    "Google Spreadsheet",
+    "Google Apps Script"
+  ],
+  "author": "hiroya@cuc.ac.jp",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kubohiroya/sheet2form/issues"
+  },
+  "homepage": "https://github.com/kubohiroya/sheet2form#readme"
 }
