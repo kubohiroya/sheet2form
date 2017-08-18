@@ -524,6 +524,9 @@ function Sheet2Form() {
         pageBreak: function (context) {
             var title = context.row[COL_INDEX.ITEM.TITLE];
             var goToPageTitle = context.row[COL_INDEX.ITEM.PAGE_BREAK.GO_TO_PAGE_TITLE];
+            if(goToPageTitle === EMPTY){
+                goToPageTitle = 'CONTINUE';
+            }
             var pageBreakItem = context.pageBreakItems[title];
             var goToPageBreakItem = PAGE_NAVIGATION_TYPE[goToPageTitle] || context.pageBreakItems[goToPageTitle];
             var lastItemIndex = context.form.getItems().length - 1;
