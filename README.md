@@ -33,10 +33,19 @@ A short example of Google Spreadsheet content as a source of Google Form:
  |17| | autumn | | |
  |18| | winter | | |
   
-Each row in this example stands for a command and a set of properties to create a form item:
- * Row 1-7: to set form preferences.
- * Row 8-18: to create form items.
- * Row 12-13, 15-18: to create choices of multiple selection items.
+Each row stands for a command and a set of properties to create a form item:
+ * Row 1-7: example to set form preferences.
+    * Column A and B consist a set of key value pair.  
+ * Row 8-18: example to create form items.
+    * Column A: itemType in lower camel case
+    * Column B: title
+    * Column C: helpText
+      * Column D: isRequired
+      * Column E: hasOptional
+      * and so on.
+ * Row 12-13, 15-18: example to create choices of multiple selection items.
+    * Column A: (empty)
+    * Column B: title
   
 ### Create new form or update pre-exist form
  
@@ -51,8 +60,8 @@ Each row in this example stands for a command and a set of properties to create 
 
 #### Add pageBreak and goToPage navigation by multipleChoice
 
-* choice with NAVIGATION
-* pageBreak with GO_TO_PAGE label
+* choice with NAVIGATION value
+* pageBreak with GO_TO_PAGE label value
 
 (FIXME: to be written)
 
@@ -77,8 +86,8 @@ Each row in this example stands for a command and a set of properties to create 
  * Usage & Example Spreadsheet (usage of all of the command descriptions and examples): 
     https://docs.google.com/spreadsheets/d/1W8OxCjZVDmqEz9EKAXRQjn2wvHDFibSRkQRuqnUBo60/edit?usp=sharing
  * Example Form (an example translated by the spreadsheet): 
-    https://docs.google.com/forms/d/14hZbP_PPKds9qsUaA6FSfQXI1ox5KSePtQWzJpCRnrI/viewform?edit_requested=true
-
+    https://docs.google.com/forms/d/e/1FAIpQLSfm4XixRJKVuwS4GY1hrUuwlCGY1bemazWRdkyUhyQ6LAtU-g/viewform
+    
  These commands and props are almost compatible to Google Apps Script Forms Service API
 : https://developers.google.com/apps-script/reference/forms/
 

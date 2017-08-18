@@ -466,7 +466,7 @@ module.exports = {
 function onEdit(event){
   var ss = event.source.getActiveSheet();
   var r = event.source.getActiveRange();
-  //r.getColumn() == 
+  //r.getColumn() ==
   if(event.value == 'bbb'){
     //r.setBackground('#aaffaa');
   }else{
@@ -486,7 +486,7 @@ function toggleHeader(){
     rowIndex: 0,
     row: undefined
   };
-  
+
   var sheet2form = new Sheet2Form();
   var headerCommands = sheet2form.headerCommands;
 
@@ -1061,7 +1061,7 @@ function Json2Sheet() {
                 rows.push(row);
             });
         });
-        
+
         return rows;
     }
 
