@@ -43,7 +43,7 @@ Each row stands for a command and a set of properties to create a form item:
       * Column D: isRequired
       * Column E: hasOptional
       * and so on.
- * Row 12-13, 15-18: example to create choices of multiple selection items.
+ * Row 12-13, 15-18: example to create choice items of multipleChoice/checkbox.
     * Column A: (empty)
     * Column B: title
   
