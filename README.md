@@ -3,14 +3,14 @@
 Google Apps Script to convert Google Form from/to Google Spreadsheet.
 
 * exportForm: 
-   Create a Google Form by converting Google Spreadsheet content values in a certain format.
+   Create/update your Google Form items and preferences by converting Google Spreadsheet content values in a certain format.
    
 * importForm:
-   Import predefined Google Form items and preferences into your Google Spreadsheet content values in a certain format.
+   Update your Google Spreadsheet content values in a certain format by converting Google Form items and form preferences.
   
 ### Limitations
 
-Warning: Incomplete conversion caused by Google Forms API insufficiency.
+Warning: Some incomplete conversions may be caused by Google Forms API insufficiency.
 
  * see https://github.com/kubohiroya/sheet2form/issues
  
@@ -106,4 +106,4 @@ More detailed usage and example are available at:
 ### `importForm`
 * COPY the URL of your pre-existed Google Form.
 * Execute the function `importForm` from customized menu in the spreadsheet UI.
-* PASTE the URL in opened dialog, then click OK.
+* PASTE the URL in opened dialog, then click OK button.
