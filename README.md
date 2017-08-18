@@ -67,69 +67,73 @@ More detailed usage and example are available at:
 ### Installation Strategy A: Copy and paste ./dist/sheet2form.gs file simply 
 
 #### 1. Create an empty spreadsheet and its Container Bounded Script
-* Create an empty Google Spreadsheet file on your GoogleDrive.
-* Open the ScriptEditor from the spreadsheet to create a Container Bounded Script Project.
-* Add a new Google Apps Script file in the project by copying `./dist/sheet2form.gs` file content in this repository.
+1. Create an empty Google Spreadsheet file on your GoogleDrive.
+1. Open the ScriptEditor from the spreadsheet to create a Container Bounded Script Project.
+1. Add a new Google Apps Script file in the project by copying `./dist/sheet2form.gs` file content in this repository.
 
 #### 2. Setup onOpen event trigger 
-* Setup a trigger to execute function `onOpen` with spreadsheet `onOpen` event.
-* Execute function `onOpen`.
+1. Setup a trigger to execute function `onOpen` with spreadsheet `onOpen` event.
+1. Execute function `onOpen`.
 
 ### Installation Strategy B: Setup and bind a reusable standalone script 
 
 #### 1. Create an empty spreadsheet and its Container Bounded Script
 
-* Create an empty Google Spreadsheet file on your GoogleDrive.
-* Open the ScriptEditor from the spreadsheet to create a Container Bounded Script Project.
-* Add a new Google Apps Script file in the project by copying `./bridge.gs` file content in this repository.
+1. Create an empty Google Spreadsheet file on your GoogleDrive.
+1. Open the ScriptEditor from the spreadsheet to create a Container Bounded Script Project.
+1. Add a new Google Apps Script file in the project by copying `./bridge.gs` file content in this repository.
 
 #### 2. Enable API
-* Enable `Google Drive API`, `Google Sheets API` by `Advanced Google Services` and `Google API Console` from `Resource` menu in the ScriptEditor.
+1. Enable `Google Drive API`, `Google Sheets API` by `Advanced Google Services` and `Google API Console` from `Resource` menu in the ScriptEditor.
  
 #### 3. Create a Standalone Script hosted on GitHub
 
-* Create an empty Google Apps Script on your GoogleDrive as a Standalone Script Project Project.
-* Setup `node-google-apps-script` so as to create your credential file and `./gapps.config.json` file.
+1. Create an empty Google Apps Script on your GoogleDrive as a Standalone Script Project Project.
+1. Setup `node-google-apps-script` so as to create your credential file and `./gapps.config.json` file.
   cf. https://www.npmjs.com/package/node-google-apps-script
-* Build and Dist the library with `npm run build && npm run dist` 
+1. Build and Dist the library with `npm run build && npm run dist` 
 
 #### 4. Bind the spreadsheet to the Standalone Script Project
-* In the Standalone Script Project, COPY the value of 'Project Key' project property.
-* In the Container Bounded Script Project, click `Resource` -> `Library` menu to open `Adding Library`, 
+1. In the Standalone Script Project, COPY the value of 'Project Key' project property.
+1. In the Container Bounded Script Project, click `Resource` -> `Library` menu to open `Adding Library`, 
  PASTE the copy of 'Project Key', so as to setup your Standalone Script Project as the library referenced by `sheet2form` variable.
  
 #### 5. Setup onOpen event trigger 
-* Setup a trigger to execute function `onOpen` with spreadsheet `onOpen` event.
-* Execute function `onOpen`.
+1. Setup a trigger to execute function `onOpen` with spreadsheet `onOpen` event.
+1. Execute function `onOpen`.
 
 ## Usage 
 ### exportForm 
  
- Create/update your Google Form items and preferences by converting Google Spreadsheet content values in a certain format.
+Create/update your Google Form items and preferences by converting Google Spreadsheet content values in a certain format.
  
- #### `executeForm`
- * Execute the function `exportForm` from customized menu `Form I/O` in the spreadsheet UI.
- * Your Google Form items and preferences, with using `title` row value and ActiveSheet of ActiveSpreadsheet, are created/updated.
+#### `executeForm`
+
+ 1. Execute the function `exportForm` from customized menu `Form I/O` in the spreadsheet UI.
+ 1. Your Google Form items and preferences, with using `title` row value and ActiveSheet of ActiveSpreadsheet, are created/updated.
   
- #### `executeForm...` 
- * Execute the function `exportForm...` from customized menu `Form I/O` in the spreadsheet UI.
- * The inputDialog window (Step 1 of 3) popups, then fill in the form title (default is using `title` row value).
- * the inputDialog window (Step 2 of 3) popups, then fill in the Spreadsheet ID or URL to convert (default is using ActiveSpreadsheet).
- * The inputDialog window (Step 3 of 3) popups, then fill in the index number of sheet to convert (default is using ActiveSheet).
- * Your Google Form items and preferences are automatically created/updated.
- * The message dialog of the URL of exported form is shown.
+#### `executeForm...` 
+
+ 1. Execute the function `exportForm...` from customized menu `Form I/O` in the spreadsheet UI.
+ 1. The inputDialog window (Step 1 of 3) popups, then fill in the form title (default is using `title` row value).
+ 1. The inputDialog window (Step 2 of 3) popups, then fill in the Spreadsheet ID or URL to convert (default is using ActiveSpreadsheet).
+ 1. The inputDialog window (Step 3 of 3) popups, then fill in the index number of sheet to convert (default is using ActiveSheet).
+ 1. Your Google Form items and preferences are automatically created/updated.
+ 1. The message dialog of the URL of exported form is shown.
   
 ### importForm
 
-* Update your form definitions in your Google Spreadsheet in the format as described above.
+Update your form definitions in your Google Spreadsheet in the format as described above.
 
 #### `importForm` 
-* Execute the function `importForm` from customized menu `Form I/O` in the spreadsheet UI.
-* The active sheet of the Google Spreadsheet are automatically updated with specified form by `id` row.
+
+ 1. Execute the function `importForm` from customized menu `Form I/O` in the spreadsheet UI.
+ 1. The active sheet of the Google Spreadsheet content is automatically updated with specified form by `id` row.
 
 #### `importForm...`
-* Execute the function `importForm...` from customized menu `Form I/O` in the spreadsheet UI.
-* The inputDialog window (Step 1 of 3) popups, then fill in the the Form ID or URL.
-* the inputDialog window (Step 2 of 3) popups, then fill in the Spreadsheet ID or URL to convert (default is using ActiveSpreadsheet).
-* The inputDialog window (Step 3 of 3) popups, then fill in the index number of sheet to convert (default is using ActiveSheet).
-* Your Google Spreadsheet are automatically updated.
+
+ 1. Execute the function `importForm...` from customized menu `Form I/O` in the spreadsheet UI.
+ 1. The inputDialog window (Step 1 of 3) popups, then fill in the the Form ID or URL to convert.
+ 1. The inputDialog window (Step 2 of 3) popups, then fill in the Spreadsheet ID or URL to update (default is using ActiveSpreadsheet).
+ 1. The inputDialog window (Step 3 of 3) popups, then fill in the index number of sheet to update (default is using ActiveSheet).
+ 1. Your Google Spreadsheet content is automatically updated.
