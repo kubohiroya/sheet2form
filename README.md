@@ -50,9 +50,10 @@ Each row stands for a command and a set of properties to create a form item:
 ### Create new form or update pre-exist form
  
 #### Create new form by `id` row with *empty value*
- The `id` row with empty value, a new Google Form will be created and the `id` row will be set with the newly created form id in process of conversion from a Google Spreadsheet to a Google Form.
+ The `id` row with empty value, a new Google Form will be created by the Google Forms API method `FormApp.create` 
+ and the `id` row will be set with the newly created form id in process of the conversion.
  
-   * In the similar way, the values of `editUrl` row, `publishedUrl` row or `summaryUrl` rows will be set.
+   * In the similar way, the values of `editUrl` row, `publishedUrl` row and `summaryUrl` rows will be set.
 
 #### Update pre-exist form by `id` row with *actual value*
  If an `id` row with actual(not-empty) value exists and its related Google Form can be opened by the Google Forms API method `FormApp.openById`, the opened form will be reused and updated.
