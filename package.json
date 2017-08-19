@@ -3,7 +3,7 @@
   },
   "name": "sheet2form",
   "description": "Google Apps Script to translate Google Form from/to Google Spreadsheet",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "main": "src/index.js",
   "devDependencies": {
     "gas-webpack-plugin": "^0.2.1",

@@ -92,7 +92,7 @@ function Sheet2Form() {
             PAGE_BREAK: {
                 NA: 3,
                 PAGE_NAVIGATION_TYPE: 4,
-                GO_TO_PAGE_TITLE: 5
+                GO_TO_PAGE_TITLE: 4
             }
         },
         FEEDBACK: {
@@ -531,7 +531,7 @@ function Sheet2Form() {
             var lastItemIndex = context.form.getItems().length - 1;
             context.form.moveItem(pageBreakItem.getIndex(), lastItemIndex);
 
-            if(pageNavigationType === PAGE_NAVIGATION_TYPE.GO_TO_PAGE){
+            if(pageNavigationType !== PAGE_NAVIGATION_TYPE.CONTINUE){
                 var goToPageTitle = context.row[COL_INDEX.ITEM.PAGE_BREAK.GO_TO_PAGE_TITLE];
                 var goToPageBreakItem = context.pageBreakItems[goToPageTitle];
                 if(goToPageBreakItem) {
