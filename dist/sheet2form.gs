@@ -1385,12 +1385,17 @@ function Sheet2Form() {
                     break;
                 }
             }
-            Logger.log(JSON.stringify(itemList));
             var choices = itemList.map(function (item) {
                 var goToPageTitle = item.navigation;
                 var goToPageBreakItem = context.pageBreakItems[goToPageTitle];
                 if (goToPageBreakItem) {
                     return context.item.createChoice(item.label, goToPageBreakItem);
+                } else if (item.navigation === PAGE_NAVIGATION_TYPE.CONTINUE) {
+                    return context.item.createChoice(item.label, FormApp.PageNavigationType.CONTINUE);
+                } else if (item.navigation === PAGE_NAVIGATION_TYPE.RESTART) {
+                    return context.item.createChoice(item.label, FormApp.PageNavigationType.RESTART);
+                } else if (item.navigation === PAGE_NAVIGATION_TYPE.SUBMIT) {
+                    return context.item.createChoice(item.label, FormApp.PageNavigationType.SUBMIT);
                 } else if (item.isCorrectAnswer) {
                     return context.item.createChoice(item.label, item.isCorrectAnswer);
                 } else {
@@ -1603,15 +1608,20 @@ function Sheet2Form() {
 
             var lastItemIndex = context.form.getItems().length - 1;
             context.form.moveItem(pageBreakItem.getIndex(), lastItemIndex);
-            /*
+
             if(pageNavigationType !== PAGE_NAVIGATION_TYPE.CONTINUE){
                 var goToPageTitle = context.row[COL_INDEX.ITEM.PAGE_BREAK.GO_TO_PAGE_TITLE];
                 var goToPageBreakItem = context.pageBreakItems[goToPageTitle];
                 if(goToPageBreakItem) {
                     pageBreakItem.setGoToPage(goToPageBreakItem);
+                }else if(pageNavigationType === PAGE_NAVIGATION_TYPE.CONTINUE) {
+                    pageBreakItem.setGoToPage(FormApp.PageNavigationType.CONTINUE);
+                }else if(pageNavigationType === PAGE_NAVIGATION_TYPE.RESTART) {
+                    pageBreakItem.setGoToPage(FormApp.PageNavigationType.RESTART);
+                }else if(pageNavigationType === PAGE_NAVIGATION_TYPE.SUBMIT) {
+                    pageBreakItem.setGoToPage(FormApp.PageNavigationType.SUBMIT);
                 }
             }
-            */
         },
 
         feedback: function (context) {
