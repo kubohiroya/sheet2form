@@ -1630,7 +1630,9 @@ function Sheet2Form() {
                 var command = context.values[rowIndex][COL_INDEX.COMMAND];
                 var feedbackDisplayTextOrUrl = context.values[rowIndex][COL_INDEX.FEEDBACK.TEXT_OR_URL];
                 var feedbackDisplayText = context.values[rowIndex][COL_INDEX.FEEDBACK.DISPLAY_TEXT];
-                if ((command === 'feedback' && rowIndex === context.rowIndex) || !isNotNullValue(command)) {
+                if ( command.charAt(0) === '#' || command == 'comment') {
+                    continue;
+                } else if ((command === 'feedback' && rowIndex === context.rowIndex) || ! isNotNullValue(command)) {
                     callWithNotNullValue(feedbackDisplayTextOrUrl, function (value) {
                         setFeedbackContent(feedback, value, feedbackDisplayText);
                     });
