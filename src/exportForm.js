@@ -4,19 +4,6 @@
 var getMessages = require('./messages');
 var Sheet2Form = require('./sheet2form');
 var messages = getMessages('ui');
-var formOptions = {
-    acceptingResponses: true,
-    allowResponseEdits: true,
-    collectEmail: true,
-    limitOneResponsePerUser: true,
-    progressBar: true,
-    publishingSummary: true,
-    requireLogin: true,
-    showLinkToRespondAgain: true,
-    shuffleQuestions: false,
-    isQuiz: false
-
-};
 
 function exportFormWithDialog() {
 
@@ -80,7 +67,7 @@ function exportFormWithDialog() {
         var formTitle = inputFormTitleWithDialog();
         var sheet = openSheetWithDialog(openSpreadsheetWithDialog());
         var sheet2form = new Sheet2Form();
-        var form = sheet2form.convert(sheet, formTitle, formOptions);
+        var form = sheet2form.convert(sheet, formTitle);
 
         var file = DriveApp.getFileById(form.getId());
         file.setName(form.getTitle());
@@ -100,7 +87,7 @@ function exportForm() {
     try {
         var sheet = SpreadsheetApp.getActiveSheet();
         var sheet2form = new Sheet2Form();
-        var form = sheet2form.convert(sheet, undefined, formOptions);
+        var form = sheet2form.convert(sheet, undefined);
         var file = DriveApp.getFileById(form.getId());
         file.setName(form.getTitle());
         Browser.msgBox(messages['form export succeed.'] + '\\n' +
