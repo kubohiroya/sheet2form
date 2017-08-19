@@ -14,38 +14,41 @@ A short example of Google Spreadsheet content as a source of Google Form:
  
  | | A | B | C | D | E |
  |---|---|---|---|---|---|
- |1|title| a sample form | | | 
- |2|description|This is a sample form.|||
- |3|id||||
- |4|isQuiz|FALSE|||
- |5|shuffleQuestions|FALSE|||
- |6|acceptingResponses|TRUE|||
- |7|publishingSummary|TRUE|||
- |8|sectionHeader| EXAMPLE |||
- |9|text| Your name | Please input your full-name. | TRUE | |
- |10|paragraphText| How do you feel like? |  |  | |
- |11|multipleChoice | Your gender | Please select your gender.| TRUE | TRUE |
- |12| | male | | |
- |13| | female | | |
- |14|checkbox| Your favorite season| Please select all of your favorite season|TRUE||
- |15| | spring | | |
- |16| | summer | | |
- |17| | autumn | | |
- |18| | winter | | |
+ |1|id||||
+ |2|publishedUrl||||
+ |3|editUrl||||
+ |4|summaryUrl||||
+ |5|title| sample | | | 
+ |6|description|This is a sample form.|||
+ |7|text| Your name | Please input your full-name. | TRUE | |
+ |8|paragraphText| How do you feel like? |  |  | |
+ |9|multipleChoice | Your gender | Please select your gender.| TRUE | TRUE |
+ |10| | male | | |
+ |11| | female | | |
+ |12|checkbox| Your favorite season| Please select all of your favorite season|TRUE||
+ |13| | spring | | |
+ |14| | summer | | |
+ |15| | autumn | | |
+ |16| | winter | | |
   
 Each row stands for a command and a set of properties to create a form item:
- * Row 1-7: example to set form preferences.
+ * Row 1-6: example to set form preferences.
     * Column A and B consist a set of key value pair.  
- * Row 8-18: example to create form items.
+ * Row 7-16: example to create form items.
     * Column A: itemType in lower camel case
     * Column B: title
     * Column C: helpText
       * Column D: isRequired
       * Column E: hasOptional
       * and so on.
- * Row 12-13, 15-18: example to create choice items of multipleChoice/checkbox.
+ * Row 10-11, 13-16: example to create choice items of multipleChoice/checkbox.
     * Column A: (empty)
     * Column B: title
+
+This Example of Google Spreadsheet can be translated into a Google Form like this: 
+https://docs.google.com/forms/d/e/1FAIpQLSc37hbcvgFYFXyLgD4ZBdK0eiLO-i3woPcf_aBGCtSN7jZMDQ/viewform
+    
+
   
 ### Create new form or update pre-exist form
  
@@ -61,33 +64,38 @@ Each row stands for a command and a set of properties to create a form item:
 
 #### Add pageBreak and goToPage navigation by multipleChoice
 
-* choice with NAVIGATION value
-* pageBreak with GO_TO_PAGE label value
-
 (FIXME: to be written)
 
+* choice item with NAVIGATION value
+* pageBreak item with GO_TO_PAGE label value
+
+https://docs.google.com/forms/d/e/1FAIpQLSdGJawVXHJ-Q8J2OQ_YjKOd2TR-ViIkM21exFOkJ8_-aJLMlA/viewform
+
 #### setup as Quiz form 
+
+(FIXME: to be written)
 
 * Form#setIsQuiz
 * Item#setPoint, Item#setFeedbackForCorrect, Item#setFeedbackForIncorrect
 * Choice#isCorrectAnswer
 
-(FIXME: to be written)
+https://docs.google.com/forms/d/e/1FAIpQLSc37hbcvgFYFXyLgD4ZBdK0eiLO-i3woPcf_aBGCtSN7jZMDQ/viewform
 
 #### Add Feedback by reference
+
+(FIXME: to be written)
 
 * feedback label with prefix \# 
 * feedback reference with prefix \# 
 
-(FIXME: to be written)
+https://docs.google.com/forms/d/e/1FAIpQLSf3kP2KkUj6fXwQW__Ak7otYNJUsImt390rTHjxShck8ZrkhA/viewform
 
-## Detailed usage and example
- are available at:
-  
+## Usage documentation in detail
+   
  * Usage & Example Spreadsheet (usage of all of the command descriptions and examples): 
     https://docs.google.com/spreadsheets/d/1W8OxCjZVDmqEz9EKAXRQjn2wvHDFibSRkQRuqnUBo60/edit?usp=sharing
- * Example Form (an example translated by the spreadsheet): 
-    https://docs.google.com/forms/d/e/1FAIpQLSfm4XixRJKVuwS4GY1hrUuwlCGY1bemazWRdkyUhyQ6LAtU-g/viewform
+    
+    https://docs.google.com/forms/d/e/1FAIpQLSf3kP2KkUj6fXwQW__Ak7otYNJUsImt390rTHjxShck8ZrkhA/viewform
     
  These commands and props are almost compatible to Google Apps Script Forms Service API
 : https://developers.google.com/apps-script/reference/forms/
