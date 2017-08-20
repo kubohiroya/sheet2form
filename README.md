@@ -62,32 +62,32 @@ https://docs.google.com/forms/d/e/1FAIpQLSc37hbcvgFYFXyLgD4ZBdK0eiLO-i3woPcf_aBG
  If an `id` row with actual(not-empty) value exists and its related Google Form can be opened by the Google Forms API method `FormApp.openById`, the opened form will be reused and updated.
 
 
-#### Add pageBreak and goToPage navigation by multipleChoice
+### Add pageBreak and goToPage navigation by multipleChoice
 
-(FIXME: to be written)
+1. Define the target `pageBreak` item row with column B as the title of pageBreak.
+1. Define the referrer `pageBreak` item row with column D cell as the reference to the other pageBreak item by the title text. 
 
-* choice item with NAVIGATION value
-* pageBreak item with GO_TO_PAGE label value
-
+Example: 
 https://docs.google.com/forms/d/e/1FAIpQLSdGJawVXHJ-Q8J2OQ_YjKOd2TR-ViIkM21exFOkJ8_-aJLMlA/viewform
 
-#### setup as Quiz form 
+#### Setup as Quiz form 
 
-(FIXME: to be written)
+1. Define the `isQuiz` preference row with `TRUE` value.
+1. In `multipleChoice`, `checkbox` and `list` item row,
+   * fill in the point value in column F cell for the correct answer.
+   * fill in the feedbackForCorrect message in column G cell.
+   * fill in the feedbackForIncorrect message in column H cell.
+1. In the every item rows of correct answer, fill in TRUE value in column C cell. 
 
-* Form#setIsQuiz
-* Item#setPoint, Item#setFeedbackForCorrect, Item#setFeedbackForIncorrect
-* Choice#isCorrectAnswer
-
+Example: 
 https://docs.google.com/forms/d/e/1FAIpQLScTzqvc44242QDfRtP-VBXKDu3hYeNPy-kfwussxmiFdH8EKA/viewform
 
 #### Add Feedback by reference
 
-(FIXME: to be written)
+1. Define feedback rows of `feedback` command and and label with prefix \# . 
+1. Refer a feedback definition by label with prefix \# .
 
-* feedback label with prefix \# 
-* feedback reference with prefix \# 
-
+Example: 
 https://docs.google.com/forms/d/e/1FAIpQLSf3kP2KkUj6fXwQW__Ak7otYNJUsImt390rTHjxShck8ZrkhA/viewform
 
 ## Usage documentation in detail
