@@ -151,19 +151,22 @@ There are 2 installation strategies. Strategy A is rather simple and easy to sta
 1. Setup a trigger to execute function `onOpen` with spreadsheet `onOpen` event.
 1. Execute function `onOpen`.
 
-## Usage 
+## Usage
+
+Execute the functions from customized menu `sheet2form` in the spreadsheet UI.
+ 
 ### exportForm 
  
-Create/update your Google Form items and preferences by converting Google Spreadsheet content values in a certain format.
+To create/update your Google Form items and preferences by converting Google Spreadsheet content values in a certain format.
  
 #### `executeForm`
 
- 1. Execute the function `exportForm` from customized menu `Form I/O` in the spreadsheet UI.
+ 1. Execute the function `exportForm` from customized menu `sheet2form` in the spreadsheet UI.
  1. Your Google Form items and preferences, with using `title` row value and ActiveSheet of ActiveSpreadsheet, are created/updated.
   
 #### `executeForm...` 
 
- 1. Execute the function `exportForm...` from customized menu `Form I/O` in the spreadsheet UI.
+ 1. Execute the function `exportForm...` from customized menu `sheet2form` in the spreadsheet UI.
  1. The inputDialog window (Step 1 of 3) popups, then fill in the form title (default is using `title` row value).
  1. The inputDialog window (Step 2 of 3) popups, then fill in the Spreadsheet ID or URL to convert (default is using ActiveSpreadsheet).
  1. The inputDialog window (Step 3 of 3) popups, then fill in the index number of sheet to convert (default is using ActiveSheet).
@@ -176,12 +179,12 @@ Update your form definitions in your Google Spreadsheet in the format as describ
 
 #### `importForm` 
 
- 1. Execute the function `importForm` from customized menu `Form I/O` in the spreadsheet UI.
+ 1. Execute the function `importForm` from customized menu `sheet2form` in the spreadsheet UI.
  1. The active sheet of the Google Spreadsheet content is automatically updated with specified form by `id` row.
 
 #### `importForm...`
 
- 1. Execute the function `importForm...` from customized menu `Form I/O` in the spreadsheet UI.
+ 1. Execute the function `importForm...` from customized menu `sheet2form` in the spreadsheet UI.
  1. The inputDialog window (Step 1 of 3) popups, then fill in the the Form ID or URL to convert.
  1. The inputDialog window (Step 2 of 3) popups, then fill in the Spreadsheet ID or URL to update (default is using ActiveSpreadsheet).
  1. The inputDialog window (Step 3 of 3) popups, then fill in the index number of sheet to update (default is using ActiveSheet).
