@@ -131,19 +131,21 @@ There are 2 installation strategies. Strategy A is rather simple and easy to sta
 1. Add a new Google Apps Script file in the project by copying `./bridge.gs` file content in this repository.
 
 #### 2. Enable API
+
 1. Enable `Google Drive API`, `Google Sheets API` by `Advanced Google Services` and `Google API Console` from `Resource` menu in the ScriptEditor.
  
 #### 3. Create a Standalone Script hosted on GitHub
 
-1. Create an empty Google Apps Script on your GoogleDrive as a Standalone Script Project Project.
+1. Fork the GitHub project repository git@github.com:kubohiroya/sheet2form.git  
+1. Create an empty Google Apps Script on your GoogleDrive as a Standalone Script Project.
 1. Setup `node-google-apps-script` so as to create your credential file and `./gapps.config.json` file.
   cf. https://www.npmjs.com/package/node-google-apps-script
-1. Build and Dist the library with `npm run build && npm run dist` 
+1. Build the repository and distribute it into the standalone script as a reusable library with `npm run build && npm run dist` 
 
 #### 4. Bind the spreadsheet to the Standalone Script Project
-1. In the Standalone Script Project, COPY the value of 'Project Key' project property.
+1. In the Standalone Script Project, copy the value of 'Project Key' project property.
 1. In the Container Bounded Script Project, click `Resource` -> `Library` menu to open `Adding Library`, 
- PASTE the copy of 'Project Key', so as to setup your Standalone Script Project as the library referenced by `sheet2form` variable.
+ paste the copy of 'Project Key', so as to setup your Standalone Script Project as the library referenced by `sheet2form` variable.
  
 #### 5. Setup onOpen event trigger 
 1. Setup a trigger to execute function `onOpen` with spreadsheet `onOpen` event.
