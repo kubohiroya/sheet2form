@@ -156,348 +156,6 @@ module.exports = getMessages;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-/* global Browser, SpreadsheetApp, Logger */
-
-var getMessages = __webpack_require__(0);
-var Sheet2Form = __webpack_require__(7);
-var messages = getMessages('ui');
-
-function exportFormWithDialog() {
-
-    var inputBoxTitle = messages['export form'];
-
-    function inputFormTitleWithDialog() {
-        var step = '(Step 1 of 3)';
-        var formTitle = Browser.inputBox(inputBoxTitle + step, messages['form title'], Browser.Buttons.OK_CANCEL);
-        if (formTitle === 'cancel') {
-            throw messages['form export canceled'];
-        } else if (formTitle === '') {
-            return messages['new form'];
-        }
-        return formTitle;
-    }
-
-    function openSpreadsheetWithDialog() {
-        var step = '(Step 2 of 3)';
-        var input = Browser.inputBox(inputBoxTitle + step, messages['input source spreadsheet ID or URL (blank to use active spreadsheet)'], Browser.Buttons.OK_CANCEL);
-        if (input === 'cancel') {
-            throw messages['form export canceled'];
-        }
-        var spreadsheet = null;
-        if (input === '') {
-            spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-        } else if (0 < input.indexOf('/')) {
-            spreadsheet = SpreadsheetApp.openByUrl(input);
-        } else {
-            spreadsheet = SpreadsheetApp.openById(input);
-        }
-        if (!spreadsheet) {
-            Browser.msgBox(messages['invalid spreadsheet ID or URL'] + ': ' + input);
-            return openSpreadsheetWithDialog();
-        }
-        return spreadsheet;
-    }
-
-    function openSheetWithDialog(spreadsheet) {
-        var step = '(Step 3 of 3)';
-        if (1 < spreadsheet.getSheets().length) {
-            var range = '0-' + (spreadsheet.getSheets().length - 1);
-            var input = Browser.inputBox(inputBoxTitle + step, messages['input sheet index'] + ':' + range + '\\n' +
-                messages['(blank to use active sheet)'], Browser.Buttons.OK_CANCEL);
-            if (input === 'cancel') {
-                throw messages['form export canceled'];
-            }
-            if (input === '') {
-                return spreadsheet.getActiveSheet();
-            }
-            var sheetIndex = parseInt(input, 10);
-            if (sheetIndex < 0 || spreadsheet.getSheets().length <= sheetIndex) {
-                Browser.msgBox(messages['invalid sheet index'] + ':' + input);
-                return openSheetWithDialog(spreadsheet);
-            }
-            return spreadsheet.getSheets()[sheetIndex]
-        }
-        return spreadsheet.getActiveSheet();
-    }
-
-    try {
-        var formTitle = inputFormTitleWithDialog();
-        var sheet = openSheetWithDialog(openSpreadsheetWithDialog());
-        var sheet2form = new Sheet2Form();
-        var form = sheet2form.convert(sheet, formTitle);
-
-        var file = DriveApp.getFileById(form.getId());
-        file.setName(form.getTitle());
-
-        Browser.msgBox(messages['form export succeed.'] + '\\n' +
-            'URL: \\n' + form.shortenFormUrl(form.getPublishedUrl()));
-    } catch (exception) {
-        Logger.log(exception);
-        if (exception.stack) {
-            Logger.log(exception.stack);
-        }
-        Browser.msgBox(messages['form export failed.'] + '\\n' + JSON.stringify(exception, null, ' '));
-    }
-}
-
-function exportForm() {
-    try {
-        var sheet = SpreadsheetApp.getActiveSheet();
-        var sheet2form = new Sheet2Form();
-        var form = sheet2form.convert(sheet, undefined);
-        var file = DriveApp.getFileById(form.getId());
-        file.setName(form.getTitle());
-        Browser.msgBox(messages['form export succeed.'] + '\\n' +
-            'URL: \\n' + form.shortenFormUrl(form.getPublishedUrl()));
-    } catch (exception) {
-        Logger.log(exception);
-        if (exception.stack) {
-            Logger.log(exception.stack);
-        }
-        Browser.msgBox(messages['form export failed.'] + '\\n' + JSON.stringify(exception, null, ' '));
-    }
-}
-
-module.exports = {
-    exportFormWithDialog: exportFormWithDialog,
-    exportForm: exportForm
-};
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-/* global Logger, Browser, SpreadsheetApp, FormApp */
-
-var getMessages = __webpack_require__(0);
-var Form2Json = __webpack_require__(5);
-var Json2Sheet = __webpack_require__(6);
-var messages = getMessages('ui');
-
-function importFormWithDialog() {
-    var inputBoxTitle = messages['import form'];
-
-    function importFormDialog() {
-        var step = '(Step 1 of 3)';
-        var input = Browser.inputBox(inputBoxTitle + step, messages['input source form ID or URL'], Browser.Buttons.OK_CANCEL);
-        if (input === 'cancel') {
-            throw messages['form import canceled'];
-        }
-        var form = null;
-        if (input === '') {
-            form = FormApp.getActiveForm();
-        } else if (0 < input.indexOf('/')) {
-            form = FormApp.openByUrl(input);
-        } else {
-            form = FormApp.openById(input);
-        }
-        if (!form) {
-            Browser.msgBox(messages['invalid form ID or URL'] + ': ' + input);
-            return importFormDialog();
-        }
-        return form;
-    }
-
-    function openSpreadsheetDialog() {
-        var step = '(Step 2 of 3)';
-        var input = Browser.inputBox(inputBoxTitle + step, messages['input target spreadsheet ID or URL (blank to use active spreadsheet)'], Browser.Buttons.OK_CANCEL);
-        if (input === 'cancel') {
-            throw messages['form import canceled'];
-        }
-        var spreadsheet = null;
-        if (input === '') {
-            spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-        } else if (0 < input.indexOf('/')) {
-            spreadsheet = SpreadsheetApp.openByUrl(input);
-        } else {
-            spreadsheet = SpreadsheetApp.openById(input);
-        }
-        if (!spreadsheet) {
-            Browser.msgBox(messages['invalid spreadsheet ID or URL'] + ': ' + input);
-            return openSpreadsheetDialog();
-        }
-        return spreadsheet;
-    }
-
-    function openSheetDialog(spreadsheet) {
-        var step = '(Step 3 of 3)';
-        if (1 < spreadsheet.getSheets().length) {
-            var range = '0-' + (spreadsheet.getSheets().length - 1);
-            var input = Browser.inputBox(inputBoxTitle + step, messages['input sheet index'] + ':' + range + '\\n' +
-                messages['(blank to use active sheet)'], Browser.Buttons.OK_CANCEL);
-            if (input === 'cancel') {
-                throw messages['form import canceled'];
-            }
-            if (input === '') {
-                return spreadsheet.getActiveSheet();
-            }
-            var sheetIndex = parseInt(input, 10);
-            if (sheetIndex < 0 || spreadsheet.getSheets().length <= sheetIndex) {
-                Browser.msgBox(messages['invalid sheet index'] + ':' + input);
-                return openSheet(spreadsheet);
-            }
-            return spreadsheet.getSheets()[sheetIndex]
-        }
-        return spreadsheet.getActiveSheet();
-    }
-
-    try {
-
-        var form = importFormDialog();
-        var sheet = openSheetDialog(openSpreadsheetDialog());
-        var json = new Form2Json().convert(form);
-
-        new Json2Sheet().convert(json, sheet);
-
-        Browser.msgBox(messages['form import succeed.']);
-    } catch (exception) {
-        Logger.log(exception);
-        if (exception.stack) {
-            Logger.log(exception.stack);
-        }
-        Browser.msgBox(messages['form import failed.'] + '\\n' + JSON.stringify(exception, null, ' '));
-    }
-}
-
-function importForm() {
-    try {
-        var sheet = SpreadsheetApp.getActiveSheet();
-        var idRows = sheet.getRange(1, 1, sheet.getLastRow(), 2).getValues().filter(function (row) {
-            return row[0] === 'id' && row[1] !== '';
-        });
-        if (idRows.length === 0) {
-            throw '`id` row is not defined.';
-        }
-        var id = idRow[0][1];
-        var form = FormApp.openById(id);
-        var numItems = form.getItems().length;
-        for (var index = numItems - 1; 0 <= index; index--) {
-            form.deleteItem(index);
-        }
-        var json = new Form2Json().convert(form);
-
-        new Json2Sheet().convert(json, sheet);
-
-        Browser.msgBox(messages['form import succeed.']);
-    } catch (exception) {
-        Logger.log(exception);
-        if (exception.stack) {
-            Logger.log(exception.stack);
-        }
-        Browser.msgBox(messages['form import failed.'] + '\\n' + JSON.stringify(exception, null, ' '));
-    }
-}
-
-module.exports = {
-    importFormWithDialog: importFormWithDialog,
-    importForm: importForm
-};
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-/* global SpreadsheetApp */
-var getMessages = __webpack_require__(0);
-function onOpen(event) {
-    var ui = SpreadsheetApp.getUi();
-
-    var messages = getMessages('ui');
-
-    ui.createMenu(messages['sheet2form'])
-        .addItem(messages['export form'], 'exportForm')
-        .addItem(messages['export form']+'...', 'exportFormWithDialog')
-        .addItem(messages['import form'], 'importForm')
-        .addItem(messages['import form']+'...', 'importFormWithDialog')
-        .addToUi();
-}
-module.exports = {
-    onOpen: onOpen
-};
-/*
-function onEdit(event){
-  var ss = event.source.getActiveSheet();
-  var r = event.source.getActiveRange();
-  //r.getColumn() == 
-  if(event.value == 'bbb'){
-    //r.setBackground('#aaffaa');
-  }else{
-    //r.setBackground('#ffaaaa');
-  }
-}
-*/
-/*
-var hideHeaderRows = false;
-function toggleHeader(){
-  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = spreadsheet.getActiveSheet();
-  var context = {
-    cols: sheet.getLastColumn(),
-    rows: sheet.getLastRow(),
-    values: sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn()).getValues(),
-    rowIndex: 0,
-    row: undefined
-  };
-  
-  var sheet2form = new Sheet2Form();
-  var headerCommands = sheet2form.headerCommands;
-
-  var start = 0, length = 0;
-  for(var rowIndex = 0; rowIndex < context.rows; rowIndex++){
-    var row = context.values[rowIndex];
-    // var range = sheet.getRange(rowIndex+1, 1, 1, context.cols);
-    var command = row[0];
-    var isHeader = headerCommands[command];
-    // Browser.msgBox(rowIndex+':'+command+':'+isHeader);
-    if(isHeader !== undefined && ! hideHeaderRows){
-      sheet.hideRows(rowIndex+1);
-    }else{
-      sheet.showRows(rowIndex+1);
-    }
-  }
-  sheet.hideSheet();
-  hideHeaderRows = ! sheet.isSheetHidden();
-}
-*/
-
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -928,7 +586,7 @@ function Form2Json() {
 module.exports = Form2Json;
 
 /***/ }),
-/* 6 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1075,7 +733,7 @@ function Json2Sheet() {
 module.exports = Json2Sheet;
 
 /***/ }),
-/* 7 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1759,18 +1417,364 @@ function Sheet2Form() {
 module.exports = Sheet2Form;
 
 /***/ }),
-/* 8 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {var exportForm = __webpack_require__(2);
-var importForm = __webpack_require__(3);
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+/* global SpreadsheetApp */
+
+var exportForm = __webpack_require__(6);
+var importForm = __webpack_require__(7);
 global.exportForm = exportForm.exportForm;
 global.importForm = importForm.importForm;
 global.exportFormWithDialog = exportForm.exportFormWithDialog;
 global.importFormWithDialog = importForm.importFormWithDialog;
-global.onOpen = __webpack_require__(4).onOpen;
+global.onOpen = function(event) {
+    var ui = SpreadsheetApp.getUi();
+    var getMessages = __webpack_require__(0);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+    var messages = getMessages('ui');
+
+    ui.createMenu(messages['sheet2form'])
+        .addItem(messages['export form'], 'exportForm')
+        .addItem(messages['export form']+'...', 'exportFormWithDialog')
+        .addItem(messages['import form'], 'importForm')
+        .addItem(messages['import form']+'...', 'importFormWithDialog')
+        .addToUi();
+};
+
+/*
+function onEdit(event){
+  var ss = event.source.getActiveSheet();
+  var r = event.source.getActiveRange();
+  //r.getColumn() == 
+  if(event.value == 'bbb'){
+    //r.setBackground('#aaffaa');
+  }else{
+    //r.setBackground('#ffaaaa');
+  }
+}
+*/
+/*
+var hideHeaderRows = false;
+function toggleHeader(){
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = spreadsheet.getActiveSheet();
+  var context = {
+    cols: sheet.getLastColumn(),
+    rows: sheet.getLastRow(),
+    values: sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn()).getValues(),
+    rowIndex: 0,
+    row: undefined
+  };
+  
+  var sheet2form = new Sheet2Form();
+  var headerCommands = sheet2form.headerCommands;
+
+  var start = 0, length = 0;
+  for(var rowIndex = 0; rowIndex < context.rows; rowIndex++){
+    var row = context.values[rowIndex];
+    // var range = sheet.getRange(rowIndex+1, 1, 1, context.cols);
+    var command = row[0];
+    var isHeader = headerCommands[command];
+    // Browser.msgBox(rowIndex+':'+command+':'+isHeader);
+    if(isHeader !== undefined && ! hideHeaderRows){
+      sheet.hideRows(rowIndex+1);
+    }else{
+      sheet.showRows(rowIndex+1);
+    }
+  }
+  sheet.hideSheet();
+  hideHeaderRows = ! sheet.isSheetHidden();
+}
+*/
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* global Browser, SpreadsheetApp, Logger */
+
+var getMessages = __webpack_require__(0);
+var Sheet2Form = __webpack_require__(3);
+var messages = getMessages('ui');
+
+function exportFormWithDialog() {
+
+    var inputBoxTitle = messages['export form'];
+
+    function inputFormTitleWithDialog() {
+        var step = '(Step 1 of 3)';
+        var formTitle = Browser.inputBox(inputBoxTitle + step, messages['form title'], Browser.Buttons.OK_CANCEL);
+        if (formTitle === 'cancel') {
+            throw messages['form export canceled'];
+        } else if (formTitle === '') {
+            return messages['new form'];
+        }
+        return formTitle;
+    }
+
+    function openSpreadsheetWithDialog() {
+        var step = '(Step 2 of 3)';
+        var input = Browser.inputBox(inputBoxTitle + step, messages['input source spreadsheet ID or URL (blank to use active spreadsheet)'], Browser.Buttons.OK_CANCEL);
+        if (input === 'cancel') {
+            throw messages['form export canceled'];
+        }
+        var spreadsheet = null;
+        if (input === '') {
+            spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+        } else if (0 < input.indexOf('/')) {
+            spreadsheet = SpreadsheetApp.openByUrl(input);
+        } else {
+            spreadsheet = SpreadsheetApp.openById(input);
+        }
+        if (!spreadsheet) {
+            Browser.msgBox(messages['invalid spreadsheet ID or URL'] + ': ' + input);
+            return openSpreadsheetWithDialog();
+        }
+        return spreadsheet;
+    }
+
+    function openSheetWithDialog(spreadsheet) {
+        var step = '(Step 3 of 3)';
+        if (1 < spreadsheet.getSheets().length) {
+            var range = '0-' + (spreadsheet.getSheets().length - 1);
+            var input = Browser.inputBox(inputBoxTitle + step, messages['input sheet index'] + ':' + range + '\\n' +
+                messages['(blank to use active sheet)'], Browser.Buttons.OK_CANCEL);
+            if (input === 'cancel') {
+                throw messages['form export canceled'];
+            }
+            if (input === '') {
+                return spreadsheet.getActiveSheet();
+            }
+            var sheetIndex = parseInt(input, 10);
+            if (sheetIndex < 0 || spreadsheet.getSheets().length <= sheetIndex) {
+                Browser.msgBox(messages['invalid sheet index'] + ':' + input);
+                return openSheetWithDialog(spreadsheet);
+            }
+            return spreadsheet.getSheets()[sheetIndex]
+        }
+        return spreadsheet.getActiveSheet();
+    }
+
+    try {
+        var formTitle = inputFormTitleWithDialog();
+        var sheet = openSheetWithDialog(openSpreadsheetWithDialog());
+        var sheet2form = new Sheet2Form();
+        var form = sheet2form.convert(sheet, formTitle);
+
+        var file = DriveApp.getFileById(form.getId());
+        file.setName(form.getTitle());
+
+        Browser.msgBox(messages['form export succeed.'] + '\\n' +
+            'URL: \\n' + form.shortenFormUrl(form.getPublishedUrl()));
+    } catch (exception) {
+        Logger.log(exception);
+        if (exception.stack) {
+            Logger.log(exception.stack);
+        }
+        Browser.msgBox(messages['form export failed.'] + '\\n' + JSON.stringify(exception, null, ' '));
+    }
+}
+
+function exportForm() {
+    try {
+        var sheet = SpreadsheetApp.getActiveSheet();
+        var sheet2form = new Sheet2Form();
+        var form = sheet2form.convert(sheet, undefined);
+        var file = DriveApp.getFileById(form.getId());
+        file.setName(form.getTitle());
+        Browser.msgBox(messages['form export succeed.'] + '\\n' +
+            'URL: \\n' + form.shortenFormUrl(form.getPublishedUrl()));
+    } catch (exception) {
+        Logger.log(exception);
+        if (exception.stack) {
+            Logger.log(exception.stack);
+        }
+        Browser.msgBox(messages['form export failed.'] + '\\n' + JSON.stringify(exception, null, ' '));
+    }
+}
+
+module.exports = {
+    exportFormWithDialog: exportFormWithDialog,
+    exportForm: exportForm
+};
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* global Logger, Browser, SpreadsheetApp, FormApp */
+
+var getMessages = __webpack_require__(0);
+var Form2Json = __webpack_require__(1);
+var Json2Sheet = __webpack_require__(2);
+var messages = getMessages('ui');
+
+function importFormWithDialog() {
+    var inputBoxTitle = messages['import form'];
+
+    function importFormDialog() {
+        var step = '(Step 1 of 3)';
+        var input = Browser.inputBox(inputBoxTitle + step, messages['input source form ID or URL'], Browser.Buttons.OK_CANCEL);
+        if (input === 'cancel') {
+            throw messages['form import canceled'];
+        }
+        var form = null;
+        if (input === '') {
+            form = FormApp.getActiveForm();
+        } else if (0 < input.indexOf('/')) {
+            form = FormApp.openByUrl(input);
+        } else {
+            form = FormApp.openById(input);
+        }
+        if (!form) {
+            Browser.msgBox(messages['invalid form ID or URL'] + ': ' + input);
+            return importFormDialog();
+        }
+        return form;
+    }
+
+    function openSpreadsheetDialog() {
+        var step = '(Step 2 of 3)';
+        var input = Browser.inputBox(inputBoxTitle + step, messages['input target spreadsheet ID or URL (blank to use active spreadsheet)'], Browser.Buttons.OK_CANCEL);
+        if (input === 'cancel') {
+            throw messages['form import canceled'];
+        }
+        var spreadsheet = null;
+        if (input === '') {
+            spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+        } else if (0 < input.indexOf('/')) {
+            spreadsheet = SpreadsheetApp.openByUrl(input);
+        } else {
+            spreadsheet = SpreadsheetApp.openById(input);
+        }
+        if (!spreadsheet) {
+            Browser.msgBox(messages['invalid spreadsheet ID or URL'] + ': ' + input);
+            return openSpreadsheetDialog();
+        }
+        return spreadsheet;
+    }
+
+    function openSheetDialog(spreadsheet) {
+        var step = '(Step 3 of 3)';
+        if (1 < spreadsheet.getSheets().length) {
+            var range = '0-' + (spreadsheet.getSheets().length - 1);
+            var input = Browser.inputBox(inputBoxTitle + step, messages['input sheet index'] + ':' + range + '\\n' +
+                messages['(blank to use active sheet)'], Browser.Buttons.OK_CANCEL);
+            if (input === 'cancel') {
+                throw messages['form import canceled'];
+            }
+            if (input === '') {
+                return spreadsheet.getActiveSheet();
+            }
+            var sheetIndex = parseInt(input, 10);
+            if (sheetIndex < 0 || spreadsheet.getSheets().length <= sheetIndex) {
+                Browser.msgBox(messages['invalid sheet index'] + ':' + input);
+                return openSheet(spreadsheet);
+            }
+            return spreadsheet.getSheets()[sheetIndex]
+        }
+        return spreadsheet.getActiveSheet();
+    }
+
+    try {
+
+        var form = importFormDialog();
+        var sheet = openSheetDialog(openSpreadsheetDialog());
+        var json = new Form2Json().convert(form);
+
+        new Json2Sheet().convert(json, sheet);
+
+        Browser.msgBox(messages['form import succeed.']);
+    } catch (exception) {
+        Logger.log(exception);
+        if (exception.stack) {
+            Logger.log(exception.stack);
+        }
+        Browser.msgBox(messages['form import failed.'] + '\\n' + JSON.stringify(exception, null, ' '));
+    }
+}
+
+function importForm() {
+    try {
+        var sheet = SpreadsheetApp.getActiveSheet();
+        var idRows = sheet.getRange(1, 1, sheet.getLastRow(), 2).getValues().filter(function (row) {
+            return row[0] === 'id' && row[1] !== '';
+        });
+        if (idRows.length === 0) {
+            throw '`id` row is not defined.';
+        }
+        var id = idRow[0][1];
+        var form = FormApp.openById(id);
+        var numItems = form.getItems().length;
+        for (var index = numItems - 1; 0 <= index; index--) {
+            form.deleteItem(index);
+        }
+        var json = new Form2Json().convert(form);
+
+        new Json2Sheet().convert(json, sheet);
+
+        Browser.msgBox(messages['form import succeed.']);
+    } catch (exception) {
+        Logger.log(exception);
+        if (exception.stack) {
+            Logger.log(exception.stack);
+        }
+        Browser.msgBox(messages['form import failed.'] + '\\n' + JSON.stringify(exception, null, ' '));
+    }
+}
+
+module.exports = {
+    importFormWithDialog: importFormWithDialog,
+    importForm: importForm
+};
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = {
+    Form2Json: __webpack_require__(1),
+    Json2Sheet: __webpack_require__(2),
+    Sheet2Form: __webpack_require__(3),
+    ui: __webpack_require__(4)
+};
+
 
 /***/ })
 /******/ ]);

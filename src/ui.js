@@ -1,8 +1,15 @@
 'use strict';
 /* global SpreadsheetApp */
-var getMessages = require('./messages');
-function onOpen(event) {
+
+var exportForm = require('./exportForm');
+var importForm = require('./importForm');
+global.exportForm = exportForm.exportForm;
+global.importForm = importForm.importForm;
+global.exportFormWithDialog = exportForm.exportFormWithDialog;
+global.importFormWithDialog = importForm.importFormWithDialog;
+global.onOpen = function(event) {
     var ui = SpreadsheetApp.getUi();
+    var getMessages = require('./messages');
 
     var messages = getMessages('ui');
 
@@ -12,10 +19,8 @@ function onOpen(event) {
         .addItem(messages['import form'], 'importForm')
         .addItem(messages['import form']+'...', 'importFormWithDialog')
         .addToUi();
-}
-module.exports = {
-    onOpen: onOpen
 };
+
 /*
 function onEdit(event){
   var ss = event.source.getActiveSheet();

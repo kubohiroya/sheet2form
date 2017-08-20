@@ -1,7 +1,6 @@
-var exportForm = require('./exportForm');
-var importForm = require('./importForm');
-global.exportForm = exportForm.exportForm;
-global.importForm = importForm.importForm;
-global.exportFormWithDialog = exportForm.exportFormWithDialog;
-global.importFormWithDialog = importForm.importFormWithDialog;
-global.onOpen = require('./ui').onOpen;
+module.exports = {
+    Form2Json: require('./form2json'),
+    Json2Sheet: require('./json2sheet'),
+    Sheet2Form: require('./sheet2form'),
+    ui: require('./ui')
+};
