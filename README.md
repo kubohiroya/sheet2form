@@ -3,11 +3,11 @@
 Bi directional conversion of form properties and items between Google Spreadsheets in a certain format and Google Forms.
 
 * exportForm: 
-   create/update your Google Form items and properties by converting Google Spreadsheet content values in a certain format.
+   create/update your Google Form properties and items by converting Google Spreadsheet content values in a certain format.
    
 * importForm:
-   update your Google Spreadsheet content values in a certain format by converting Google Form items and form properties.
-  
+   update your Google Spreadsheet content values in a certain format by converting Google Form properties and items.
+   
 ## Example
 
 A short example of Google Spreadsheet content as a source of Google Form:
@@ -31,7 +31,7 @@ A short example of Google Spreadsheet content as a source of Google Form:
  |15| | autumn | | |
  |16| | winter | | |
   
-Each row stands for a command and a set of properties to create a form item:
+Each row is to define a key value pair of form property or a form item properties:
  * Row 1-6: example to set form properties.
     * Column A and B consist a set of key value pair.  
  * Row 7-16: example to create form items.
@@ -162,7 +162,7 @@ To create/update your Google Form items and properties by converting Google Spre
 #### `executeForm`
 
  1. Execute the function `exportForm` from customized menu `sheet2form` in the spreadsheet UI.
- 1. Your Google Form items and properties, with using `title` row value and ActiveSheet of ActiveSpreadsheet, are created/updated.
+ 1. Your Google Form is automatically created with use of ActiveSheet contents of ActiveSpreadsheet, set title by `title` row value. 
   
 #### `executeForm...` 
 
@@ -170,7 +170,7 @@ To create/update your Google Form items and properties by converting Google Spre
  1. The inputDialog window (Step 1 of 3) popups, then fill in the form title (default is using `title` row value).
  1. The inputDialog window (Step 2 of 3) popups, then fill in the Spreadsheet ID or URL to convert (default is using ActiveSpreadsheet).
  1. The inputDialog window (Step 3 of 3) popups, then fill in the index number of sheet to convert (default is using ActiveSheet).
- 1. Your Google Form items and properties are automatically created/updated.
+ 1. Your Google Form is automatically created/updated.
  1. The message dialog of the URL of exported form is shown.
   
 ### importForm
