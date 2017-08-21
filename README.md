@@ -1,6 +1,6 @@
 # sheet2form
 
-Bi directional conversion of form properties and items between Google Spreadsheets in a certain format and Google Forms.
+Bi directional conversion of Google Forms and Google Spreadsheets using Google Apps Scripts handling representations of form properties and items on Google Spreadsheet in a certain format..
 
 * exportForm: 
    create/update your Google Form properties and items by converting Google Spreadsheet content values in a certain format.
