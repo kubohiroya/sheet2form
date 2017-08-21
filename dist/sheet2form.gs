@@ -170,7 +170,7 @@ function Form2Json() {
      * @param form {Form} a Google Form Object
      * */
     function convert(form) {
-        var metadata = {
+        var properties = {
             isQuiz: form.isQuiz(),
             acceptingResponses: form.isAcceptingResponses(),
             publishingSummary: form.isPublishingSummary(),
@@ -187,13 +187,13 @@ function Form2Json() {
         };
 
         try {
-            metaedata.destinationId = form.getDestinationId();
-            metaedata.destinationType = form.getDestinationType();
+            properties.destinationId = form.getDestinationId();
+            properties.destinationType = form.getDestinationType();
         } catch (ignore) {
         }
 
         return {
-            metadata: metadata,
+            properties: properties,
             items: form.getItems().map(itemToJson)
         };
     }
@@ -214,24 +214,6 @@ function Form2Json() {
         SECTION_HEADER: FormApp.ItemType.SECTION_HEADER,
         TEXT: FormApp.ItemType.TEXT,
         TIME: FormApp.ItemType.TIME
-    };
-
-    const TYPE_NAMES_UPPER = {
-        CHECKBOX: 'CHECKBOX',
-        CHECKBOX_GRID: 'CHECKBOX_GRID',
-        DATE: 'DATE',
-        DATETIME: 'DATETIME',
-        DURATION: 'DURATION',
-        GRID: 'GRID',
-        IMAGE: 'IMAGE',
-        LIST: 'LIST',
-        MULTIPLE_CHOICE: 'MULTIPLE_CHOICE',
-        PAGE_BREAK: 'PAGE_BREAK',
-        PARAGRAPH_TEXT: 'PARAGRAPH_TEXT',
-        SCALE: 'SCALE',
-        SECTION_HEADER: 'SECTION_HEADER',
-        TEXT: 'TEXT',
-        TIME: 'TIME'
     };
 
     const TYPE_NAMES = {
@@ -698,8 +680,8 @@ function Json2Sheet() {
      */
     function jsonToValues(json) {
         var rows = [];
-        Object.keys(json.metadata).forEach(function(key){
-            rows.push([key, json.metadata[key]]);
+        Object.keys(json.properties).forEach(function(key){
+            rows.push([key, json.properties[key]]);
         });
         json.items.forEach(function(item){
             itemToRows(item).forEach(function(row){
@@ -888,7 +870,7 @@ function Sheet2Form() {
         }
     }
 
-    const formMetadataRetrievers = {
+    const formPropertiesRetrievers = {
         title: function (context) {
             context.formPreferences.title = context.row[COL_INDEX.META.TITLE];
         },
@@ -952,7 +934,7 @@ function Sheet2Form() {
         }
     };
 
-    const formMetadataHandlers = {
+    const formPropertiesHandlers = {
         title: function (context) {
             context.form.setTitle(context.formPreferences.title)
         },
@@ -1013,7 +995,7 @@ function Sheet2Form() {
     };
 
     const itemModifiers = {
-        itemMetadata: function (context) {
+        itemProperties: function (context) {
             callWithNotNullValue(context.row[COL_INDEX.ITEM.TITLE], function (value) {
                 context.item.setTitle(value);
             });
@@ -1021,7 +1003,7 @@ function Sheet2Form() {
                 context.item.setHelpText(value);
             });
         },
-        questionMetadata: function (context) {
+        questionProperties: function (context) {
             callWithBooleanValue(context.row[COL_INDEX.ITEM.Q.REQUIRED], function (value) {
                 context.item.setRequired(value);
             });
@@ -1067,7 +1049,7 @@ function Sheet2Form() {
                 context.item.showOtherOption(value);
             });
         },
-        quizMetadata: function (context) {
+        quizProperties: function (context) {
             callWithIntegerValue(context.row[COL_INDEX.ITEM.Q.CHOICE.META.POINTS], function (value) {
                 context.item.setPoints(value);
             });
@@ -1100,13 +1082,13 @@ function Sheet2Form() {
     function multipleChoiceHandler (context) {
         context.item = context.form.addMultipleChoiceItem();
         itemModifiers.choices(context);
-        itemModifiers.itemMetadata(context);
-        itemModifiers.questionMetadata(context);
+        itemModifiers.itemProperties(context);
+        itemModifiers.questionProperties(context);
         itemModifiers.showOtherOption(context);
         if (context.form.isQuiz()) {
-            itemModifiers.quizMetadata(context);
+            itemModifiers.quizProperties(context);
         }
-    };
+    }
 
     function gridHandler (context){
         var rowList = [], colList = [];
@@ -1127,9 +1109,9 @@ function Sheet2Form() {
             }
         }
         context.item.setRows(rowList).setColumns(colList);
-        itemModifiers.itemMetadata(context);
-        itemModifiers.questionMetadata(context);
-    };
+        itemModifiers.itemProperties(context);
+        itemModifiers.questionProperties(context);
+    }
 
     const itemHandlers = {
         radio: multipleChoiceHandler,
@@ -1139,19 +1121,19 @@ function Sheet2Form() {
         checkbox: function (context) {
             context.item = context.form.addCheckboxItem();
             itemModifiers.choices(context);
-            itemModifiers.itemMetadata(context);
-            itemModifiers.questionMetadata(context);
+            itemModifiers.itemProperties(context);
+            itemModifiers.questionProperties(context);
             itemModifiers.showOtherOption(context);
             if (context.form.isQuiz()) {
-                itemModifiers.quizMetadata(context);
+                itemModifiers.quizProperties(context);
             }
         },
 
         list: function (context) {
             context.item = context.form.addListItem();
             itemModifiers.choices(context);
-            itemModifiers.itemMetadata(context);
-            itemModifiers.questionMetadata(context);
+            itemModifiers.itemProperties(context);
+            itemModifiers.questionProperties(context);
         },
 
         checkboxGrid: function (context) {
@@ -1166,40 +1148,40 @@ function Sheet2Form() {
 
         time: function (context) {
             context.item = context.form.addTimeItem();
-            itemModifiers.itemMetadata(context);
-            itemModifiers.questionMetadata(context);
+            itemModifiers.itemProperties(context);
+            itemModifiers.questionProperties(context);
         },
 
         date: function (context) {
             context.item = context.form.addDateItem();
             itemModifiers.includesYear(context);
-            itemModifiers.itemMetadata(context);
-            itemModifiers.questionMetadata(context);
+            itemModifiers.itemProperties(context);
+            itemModifiers.questionProperties(context);
         },
 
         datetime: function (context) {
             context.item = context.form.addDateTimeItem();
             itemModifiers.includesYear(context);
-            itemModifiers.itemMetadata(context);
-            itemModifiers.questionMetadata(context);
+            itemModifiers.itemProperties(context);
+            itemModifiers.questionProperties(context);
         },
 
         text: function (context) {
             context.item = context.form.addTextItem();
-            itemModifiers.itemMetadata(context);
-            itemModifiers.questionMetadata(context);
+            itemModifiers.itemProperties(context);
+            itemModifiers.questionProperties(context);
         },
 
         paragraphText: function (context) {
             context.item = context.form.addParagraphTextItem();
-            itemModifiers.itemMetadata(context);
-            itemModifiers.questionMetadata(context);
+            itemModifiers.itemProperties(context);
+            itemModifiers.questionProperties(context);
         },
 
         duration: function (context) {
             context.item = context.form.addDurationItem();
-            itemModifiers.itemMetadata(context);
-            itemModifiers.questionMetadata(context);
+            itemModifiers.itemProperties(context);
+            itemModifiers.questionProperties(context);
         },
 
         scale: function (context) {
@@ -1214,13 +1196,13 @@ function Sheet2Form() {
                     context.item.setBounds(lower, upper);
                 });
             });
-            itemModifiers.itemMetadata(context);
-            itemModifiers.questionMetadata(context);
+            itemModifiers.itemProperties(context);
+            itemModifiers.questionProperties(context);
         },
 
         sectionHeader: function (context) {
             context.item = context.form.addSectionHeaderItem();
-            itemModifiers.itemMetadata(context);
+            itemModifiers.itemProperties(context);
         },
 
         video: function (context) {
@@ -1236,7 +1218,7 @@ function Sheet2Form() {
                     context.item.setAlignment(alignment);
                 }
             });
-            itemModifiers.itemMetadata(context);
+            itemModifiers.itemProperties(context);
         },
 
         image: function (context) {
@@ -1252,7 +1234,7 @@ function Sheet2Form() {
                     context.item.setAlignment(alignment);
                 }
             });
-            itemModifiers.itemMetadata(context);
+            itemModifiers.itemProperties(context);
         },
 
         pageBreak: function (context) {
@@ -1288,7 +1270,7 @@ function Sheet2Form() {
                 var command = context.values[rowIndex][COL_INDEX.COMMAND];
                 var feedbackDisplayTextOrUrl = context.values[rowIndex][COL_INDEX.FEEDBACK.TEXT_OR_URL];
                 var feedbackDisplayText = context.values[rowIndex][COL_INDEX.FEEDBACK.DISPLAY_TEXT];
-                if ( command.charAt(0) === '#' || command == 'comment') {
+                if ( command.charAt(0) === '#' || command === 'comment') {
                     continue;
                 } else if ((command === 'feedback' && rowIndex === context.rowIndex) || ! isNotNullValue(command)) {
                     callWithNotNullValue(feedbackDisplayTextOrUrl, function (value) {
@@ -1335,7 +1317,7 @@ function Sheet2Form() {
             context.row = context.values[rowIndex];
             if (context.row[COL_INDEX.COMMAND] === 'pageBreak') {
                 context.item = context.form.addPageBreakItem();
-                itemModifiers.itemMetadata(context);
+                itemModifiers.itemProperties(context);
                 context.pageBreakItems[context.item.getTitle()] = context.item;
             }
         }
@@ -1352,8 +1334,8 @@ function Sheet2Form() {
                 break;
             } else if (command.charAt(0) === '#' || command === 'comment') {
                 continue;
-            } else if (formMetadataRetrievers[command]) {
-                formMetadataRetrievers[command](context);
+            } else if (formPropertiesRetrievers[command]) {
+                formPropertiesRetrievers[command](context);
             } else if (itemHandlers[command]) {
                 if (context.form === null){
                     if (context.formPreferences.id) {
@@ -1367,7 +1349,7 @@ function Sheet2Form() {
                     }
                     updateCellValues(context);
                     Object.keys(context.formPreferences).forEach(function(command){
-                        formMetadataHandlers[command](context);
+                        formPropertiesHandlers[command](context);
                     });
                     setupPageBreakItems(context);
                 }
