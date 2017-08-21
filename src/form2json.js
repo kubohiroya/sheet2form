@@ -9,7 +9,7 @@ function Form2Json() {
      * @param form {Form} a Google Form Object
      * */
     function convert(form) {
-        var metadata = {
+        var properties = {
             isQuiz: form.isQuiz(),
             acceptingResponses: form.isAcceptingResponses(),
             publishingSummary: form.isPublishingSummary(),
@@ -26,13 +26,13 @@ function Form2Json() {
         };
 
         try {
-            metaedata.destinationId = form.getDestinationId();
-            metaedata.destinationType = form.getDestinationType();
+            properties.destinationId = form.getDestinationId();
+            properties.destinationType = form.getDestinationType();
         } catch (ignore) {
         }
 
         return {
-            metadata: metadata,
+            properties: properties,
             items: form.getItems().map(itemToJson)
         };
     }
@@ -53,24 +53,6 @@ function Form2Json() {
         SECTION_HEADER: FormApp.ItemType.SECTION_HEADER,
         TEXT: FormApp.ItemType.TEXT,
         TIME: FormApp.ItemType.TIME
-    };
-
-    const TYPE_NAMES_UPPER = {
-        CHECKBOX: 'CHECKBOX',
-        CHECKBOX_GRID: 'CHECKBOX_GRID',
-        DATE: 'DATE',
-        DATETIME: 'DATETIME',
-        DURATION: 'DURATION',
-        GRID: 'GRID',
-        IMAGE: 'IMAGE',
-        LIST: 'LIST',
-        MULTIPLE_CHOICE: 'MULTIPLE_CHOICE',
-        PAGE_BREAK: 'PAGE_BREAK',
-        PARAGRAPH_TEXT: 'PARAGRAPH_TEXT',
-        SCALE: 'SCALE',
-        SECTION_HEADER: 'SECTION_HEADER',
-        TEXT: 'TEXT',
-        TIME: 'TIME'
     };
 
     const TYPE_NAMES = {

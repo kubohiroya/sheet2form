@@ -106,8 +106,8 @@ function Json2Sheet() {
      */
     function jsonToValues(json) {
         var rows = [];
-        Object.keys(json.metadata).forEach(function(key){
-            rows.push([key, json.metadata[key]]);
+        Object.keys(json.properties).forEach(function(key){
+            rows.push([key, json.properties[key]]);
         });
         json.items.forEach(function(item){
             itemToRows(item).forEach(function(row){

@@ -2,8 +2,8 @@
   "dependencies": {
   },
   "name": "sheet2form",
-  "description": "Google Apps Script to translate Google Form from/to Google Spreadsheet",
-  "version": "0.2.3",
+  "description": "Bi directional conversion of form properties and items between Google Spreadsheets in a certain format and Google Forms",
+  "version": "0.2.4",
   "main": "src/index.js",
   "devDependencies": {
     "gas-webpack-plugin": "^0.2.1",
@@ -20,7 +20,8 @@
   "keywords": [
     "Google Form",
     "Google Spreadsheet",
-    "Google Apps Script"
+    "Google Apps Script",
+    "data format conversion"
   ],
   "author": "hiroya@cuc.ac.jp",
   "license": "MIT",

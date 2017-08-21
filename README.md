@@ -1,12 +1,12 @@
 # sheet2form
 
-Google Apps Script to convert Google Form from/to Google Spreadsheet.
+Bi directional conversion of form properties and items between Google Spreadsheets in a certain format and Google Forms.
 
 * exportForm: 
-   create/update your Google Form items and preferences by converting Google Spreadsheet content values in a certain format.
+   create/update your Google Form items and properties by converting Google Spreadsheet content values in a certain format.
    
 * importForm:
-   update your Google Spreadsheet content values in a certain format by converting Google Form items and form preferences.
+   update your Google Spreadsheet content values in a certain format by converting Google Form items and form properties.
   
 ## Example
 
@@ -32,7 +32,7 @@ A short example of Google Spreadsheet content as a source of Google Form:
  |16| | winter | | |
   
 Each row stands for a command and a set of properties to create a form item:
- * Row 1-6: example to set form preferences.
+ * Row 1-6: example to set form properties.
     * Column A and B consist a set of key value pair.  
  * Row 7-16: example to create form items.
     * Column A: itemType in lower camel case
@@ -72,7 +72,7 @@ https://docs.google.com/forms/d/e/1FAIpQLSdGJawVXHJ-Q8J2OQ_YjKOd2TR-ViIkM21exFOk
 
 #### Setup as Quiz form 
 
-1. Define the `isQuiz` preference row with `TRUE` value.
+1. Define the `isQuiz` property row with `TRUE` value.
 1. In `multipleChoice`, `checkbox` and `list` item row,
    * fill in the point value in column F cell for the correct answer.
    * fill in the feedbackForCorrect message in column G cell.
@@ -127,8 +127,8 @@ There are 2 installation strategies. Strategy A is rather simple and easy to sta
 #### 1. Create an empty spreadsheet and its Container Bounded Script
 
 1. Create an empty Google Spreadsheet file on your GoogleDrive.
-1. Open the ScriptEditor from the spreadsheet to create a Container Bounded Script Project.
-1. Add a new Google Apps Script file in the project by copying `./bridge.gs` file content in this repository.
+1. Select **Tools > Script editor** from within the spreadsheet to create a Container Bounded Script Project.
+1. Select **File > New** from within Script editor, add a new Google Apps Script file in the project by copying `./bridge.gs` file content in this repository.
 
 #### 2. Enable API
 
@@ -157,12 +157,12 @@ Execute the functions from customized menu `sheet2form` in the spreadsheet UI.
  
 ### exportForm 
  
-To create/update your Google Form items and preferences by converting Google Spreadsheet content values in a certain format.
+To create/update your Google Form items and properties by converting Google Spreadsheet content values in a certain format.
  
 #### `executeForm`
 
  1. Execute the function `exportForm` from customized menu `sheet2form` in the spreadsheet UI.
- 1. Your Google Form items and preferences, with using `title` row value and ActiveSheet of ActiveSpreadsheet, are created/updated.
+ 1. Your Google Form items and properties, with using `title` row value and ActiveSheet of ActiveSpreadsheet, are created/updated.
   
 #### `executeForm...` 
 
@@ -170,7 +170,7 @@ To create/update your Google Form items and preferences by converting Google Spr
  1. The inputDialog window (Step 1 of 3) popups, then fill in the form title (default is using `title` row value).
  1. The inputDialog window (Step 2 of 3) popups, then fill in the Spreadsheet ID or URL to convert (default is using ActiveSpreadsheet).
  1. The inputDialog window (Step 3 of 3) popups, then fill in the index number of sheet to convert (default is using ActiveSheet).
- 1. Your Google Form items and preferences are automatically created/updated.
+ 1. Your Google Form items and properties are automatically created/updated.
  1. The message dialog of the URL of exported form is shown.
   
 ### importForm
