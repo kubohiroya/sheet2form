@@ -2,8 +2,8 @@
   "dependencies": {
   },
   "name": "sheet2form",
-  "description": "Bi directional conversion of Google Forms and Google Spreadsheets using Google Apps Scripts handling representations of form properties and items on Google Spreadsheet in a certain format.",
-  "version": "0.2.6",
+  "description": "Bi directional conversion of Google Forms and Google Spreadsheets by use of Google Apps Scripts handling representations of form properties and items on Google Spreadsheet in a certain format.",
+  "version": "0.2.7",
   "main": "src/index.js",
   "devDependencies": {
     "gas-webpack-plugin": "^0.2.1",

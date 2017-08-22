@@ -2,7 +2,7 @@
 
 ![sheet2form](https://user-images.githubusercontent.com/1578247/29584862-103c9a4c-87c0-11e7-9b36-ba6f3d95dd09.png)
 
-Bi directional conversion of Google Forms and Google Spreadsheets using Google Apps Scripts handling representations of form properties and items on Google Spreadsheet in a certain format..
+Bi directional conversion of Google Forms and Google Spreadsheets by use of Google Apps Scripts handling sources/representations of form properties and items on Google Spreadsheet in a certain format.
 
 * ExportForm: 
    create/update your Google Form properties and items by converting Google Spreadsheet content values in a certain format.
@@ -12,7 +12,7 @@ Bi directional conversion of Google Forms and Google Spreadsheets using Google A
    
 ## Example
 
-A short example of Google Spreadsheet content as a source of Google Form:
+A short example of Google Spreadsheet content as a source/representation of a Google Form:
  
  | | A | B | C | D | E |
  |---|---|---|---|---|---|
@@ -47,10 +47,11 @@ Each row is to define a key value pair of form property or a form item propertie
     * Column A: (empty)
     * Column B: title
 
-This Example of Google Spreadsheet can be translated into a Google Form like this: 
+This example of Google Spreadsheet can be translated into a Google Form as follows: 
 https://docs.google.com/forms/d/e/1FAIpQLSc37hbcvgFYFXyLgD4ZBdK0eiLO-i3woPcf_aBGCtSN7jZMDQ/viewform
     
 
+## Miscellaneous Features 
   
 ### Create new form or update pre-exist form
  
@@ -61,6 +62,7 @@ https://docs.google.com/forms/d/e/1FAIpQLSc37hbcvgFYFXyLgD4ZBdK0eiLO-i3woPcf_aBG
    * In the similar way, the values of `editUrl` row, `publishedUrl` row and `summaryUrl` rows will be set.
 
 #### Update pre-exist form by `id` row with *actual value*
+
  If an `id` row with actual(not-empty) value exists and its related Google Form can be opened by the Google Forms API method `FormApp.openById`, the opened form will be reused and updated.
 
 
@@ -72,10 +74,10 @@ https://docs.google.com/forms/d/e/1FAIpQLSc37hbcvgFYFXyLgD4ZBdK0eiLO-i3woPcf_aBG
 Example: 
 https://docs.google.com/forms/d/e/1FAIpQLSdGJawVXHJ-Q8J2OQ_YjKOd2TR-ViIkM21exFOkJ8_-aJLMlA/viewform
 
-#### Setup as Quiz form 
+### Setup as Quiz form 
 
-1. Define the `isQuiz` property row with `TRUE` value.
-1. Define the `multipleChoice`, `checkbox` or `list` item row,
+1. Define a row of property definition by `isQuiz` property key and `TRUE` value.
+1. Define rows of `multipleChoice`, `checkbox` or `list` item,
    * fill in the point value in column F cell for the correct answer.
    * fill in the feedbackForCorrect message in column G cell.
    * fill in the feedbackForIncorrect message in column H cell.
@@ -84,27 +86,28 @@ https://docs.google.com/forms/d/e/1FAIpQLSdGJawVXHJ-Q8J2OQ_YjKOd2TR-ViIkM21exFOk
 Example: 
 https://docs.google.com/forms/d/e/1FAIpQLScTzqvc44242QDfRtP-VBXKDu3hYeNPy-kfwussxmiFdH8EKA/viewform
 
-#### Add Feedback by reference
+### Setup feedback by referencing feedback item
 
-1. Define feedback rows of `feedback` command and and label with prefix \# . 
-1. Refer a feedback definition by label with prefix \# .
+1. Define feedback rows by `feedback` command and and label with prefix \# . 
+1. Refer the feedback definitions by labels with prefix \# .
 
 Example: 
 https://docs.google.com/forms/d/e/1FAIpQLSf3kP2KkUj6fXwQW__Ak7otYNJUsImt390rTHjxShck8ZrkhA/viewform
 
-## Usage documentation in detail
+## References and a set of examples
    
- * Usage & Example Spreadsheet (usage of all of the command descriptions and examples): 
+ * References & a set of examples (including all of the command descriptions): 
     https://docs.google.com/spreadsheets/d/1W8OxCjZVDmqEz9EKAXRQjn2wvHDFibSRkQRuqnUBo60/edit?usp=sharing
     
     https://docs.google.com/forms/d/e/1FAIpQLSf3kP2KkUj6fXwQW__Ak7otYNJUsImt390rTHjxShck8ZrkhA/viewform
     
- These commands and props are almost compatible to Google Apps Script Forms Service API
+ The names of properties and commands (id, title, editUrl, acceptingResponses, multipleChoice, checkbox, list, paragraphText and so on) 
+ are derived from Google Apps Script Forms Service API vocabularies
 : https://developers.google.com/apps-script/reference/forms/
 
 ### Limitations
 
-Warning: some incomplete conversions may be caused by Google Forms API insufficiency.
+Warning: Some incomplete conversions may be caused by insufficiencies of Google Apps Script Forms Service API.
 
  * cf. https://github.com/kubohiroya/sheet2form/issues
  
@@ -132,7 +135,7 @@ There are 2 installation strategies. Strategy A is rather simple and easy to sta
 1. Select **Tools > Script editor** from within the spreadsheet to create a Container Bounded Script Project.
 1. Select **File > New** from within Script editor, add a new Google Apps Script file in the project by copying `./bridge.gs` file content in this repository.
 
-#### 2. Enable API
+#### 2. Enable APIs
 
 1. Enable `Google Drive API`, `Google Sheets API` by `Advanced Google Services` and `Google API Console` from `Resource` menu in the ScriptEditor.
  
