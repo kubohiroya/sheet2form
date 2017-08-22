@@ -1,5 +1,7 @@
 # sheet2form
 
+![sheet2form](https://user-images.githubusercontent.com/1578247/29584862-103c9a4c-87c0-11e7-9b36-ba6f3d95dd09.png)
+
 Bi directional conversion of Google Forms and Google Spreadsheets using Google Apps Scripts handling representations of form properties and items on Google Spreadsheet in a certain format..
 
 * ExportForm: 
@@ -104,7 +106,7 @@ https://docs.google.com/forms/d/e/1FAIpQLSf3kP2KkUj6fXwQW__Ak7otYNJUsImt390rTHjx
 
 Warning: some incomplete conversions may be caused by Google Forms API insufficiency.
 
- * see https://github.com/kubohiroya/sheet2form/issues
+ * cf. https://github.com/kubohiroya/sheet2form/issues
  
 
 ## Installation

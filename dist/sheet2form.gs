@@ -97,7 +97,7 @@ function getMessages_en(category) {
     return {
         ui: {
             'sheet2form': 'sheet2form',
-            'export form': 'export form',
+            'export form': 'Export form',
             'initialize sheet': 'initialize sheet',
             'validate sheet': 'validate sheet',
             'export form from sheet': 'export form from sheet',
@@ -111,7 +111,7 @@ function getMessages_en(category) {
             'invalid sheet index': 'invalid sheet index',
             'form export succeed.': 'form export succeed.',
             'form export failed.': 'form export failed.',
-            'import form': 'import form',
+            'import form': 'Import form',
             'input source form ID or URL': 'input source form ID or URL',
             'input target spreadsheet ID or URL (blank to use active spreadsheet)':'input target spreadsheet ID or URL (blank to use active spreadsheet)',
             'form import canceled': 'form import canceled',
