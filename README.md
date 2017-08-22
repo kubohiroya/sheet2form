@@ -2,10 +2,10 @@
 
 Bi directional conversion of Google Forms and Google Spreadsheets using Google Apps Scripts handling representations of form properties and items on Google Spreadsheet in a certain format..
 
-* exportForm: 
+* ExportForm: 
    create/update your Google Form properties and items by converting Google Spreadsheet content values in a certain format.
    
-* importForm:
+* ImportForm:
    update your Google Spreadsheet content values in a certain format by converting Google Form properties and items.
    
 ## Example
@@ -62,7 +62,7 @@ https://docs.google.com/forms/d/e/1FAIpQLSc37hbcvgFYFXyLgD4ZBdK0eiLO-i3woPcf_aBG
  If an `id` row with actual(not-empty) value exists and its related Google Form can be opened by the Google Forms API method `FormApp.openById`, the opened form will be reused and updated.
 
 
-### Add pageBreak and goToPage navigation by multipleChoice
+### Setup goToPage navigation from one of multipleChoice items to a pageBreak
 
 1. Define the target `pageBreak` item row with column B as the title of pageBreak.
 1. Define the referrer `pageBreak` item row with column D cell as the reference to the other pageBreak item by the title text. 
@@ -73,11 +73,11 @@ https://docs.google.com/forms/d/e/1FAIpQLSdGJawVXHJ-Q8J2OQ_YjKOd2TR-ViIkM21exFOk
 #### Setup as Quiz form 
 
 1. Define the `isQuiz` property row with `TRUE` value.
-1. In `multipleChoice`, `checkbox` and `list` item row,
+1. Define the `multipleChoice`, `checkbox` or `list` item row,
    * fill in the point value in column F cell for the correct answer.
    * fill in the feedbackForCorrect message in column G cell.
    * fill in the feedbackForIncorrect message in column H cell.
-1. In the every item rows of correct answer, fill in TRUE value in column C cell. 
+1. Every choice item row of which answer is correct, set TRUE value in column C cell. 
 
 Example: 
 https://docs.google.com/forms/d/e/1FAIpQLScTzqvc44242QDfRtP-VBXKDu3hYeNPy-kfwussxmiFdH8EKA/viewform
@@ -155,36 +155,36 @@ There are 2 installation strategies. Strategy A is rather simple and easy to sta
 
 Execute the functions from customized menu `sheet2form` in the spreadsheet UI.
  
-### exportForm 
+### Export Form 
  
 To create/update your Google Form items and properties by converting Google Spreadsheet content values in a certain format.
  
-#### `executeForm`
+#### *Execute Form*
 
- 1. Execute the function `exportForm` from customized menu `sheet2form` in the spreadsheet UI.
+ 1. Click *sheet2form > Export Form* of the Google Spreadsheet toolbar.
  1. Your Google Form is automatically created with use of ActiveSheet contents of ActiveSpreadsheet, set title by `title` row value. 
   
-#### `executeForm...` 
+#### *Execute Form...* 
 
- 1. Execute the function `exportForm...` from customized menu `sheet2form` in the spreadsheet UI.
+ 1. Click *sheet2form > Export Form...* of the Google Spreadsheet toolbar.
  1. The inputDialog window (Step 1 of 3) popups, then fill in the form title (default is using `title` row value).
  1. The inputDialog window (Step 2 of 3) popups, then fill in the Spreadsheet ID or URL to convert (default is using ActiveSpreadsheet).
  1. The inputDialog window (Step 3 of 3) popups, then fill in the index number of sheet to convert (default is using ActiveSheet).
  1. Your Google Form is automatically created/updated.
  1. The message dialog of the URL of exported form is shown.
   
-### importForm
+### Import Form
 
 Update your form definitions in your Google Spreadsheet in the format as described above.
 
-#### `importForm` 
+#### *Import Form* 
 
- 1. Execute the function `importForm` from customized menu `sheet2form` in the spreadsheet UI.
- 1. The active sheet of the Google Spreadsheet content is automatically updated with specified form by `id` row.
+ 1. Click *sheet2form > Import Form* of the Google Spreadsheet toolbar.
+ 1. The active sheet of the Google Spreadsheet content is automatically updated with specified form by `id` row value.
 
-#### `importForm...`
+#### *Import Form...*
 
- 1. Execute the function `importForm...` from customized menu `sheet2form` in the spreadsheet UI.
+ 1. Click *sheet2form > Import Form...* of the Google Spreadsheet toolbar.
  1. The inputDialog window (Step 1 of 3) popups, then fill in the the Form ID or URL to convert.
  1. The inputDialog window (Step 2 of 3) popups, then fill in the Spreadsheet ID or URL to update (default is using ActiveSpreadsheet).
  1. The inputDialog window (Step 3 of 3) popups, then fill in the index number of sheet to update (default is using ActiveSheet).
