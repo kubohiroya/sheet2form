@@ -619,9 +619,8 @@ function Sheet2Form() {
                 if (context.form === null){
                     if (context.formPreferences.id) {
                         context.form = FormApp.openById(context.formPreferences.id);
-                        var numItems = context.form.getItems().length;
-                        for(var index = numItems - 1; 0 <= index; index--){
-                            context.form.deleteItem(index);
+                        while(context.form.getItems().length > 0){
+                            context.form.deleteItem(0);                            
                         }
                     } else {
                         context.form = FormApp.create(context.formPreferences.title);
